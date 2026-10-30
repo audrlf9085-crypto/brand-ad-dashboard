@@ -7,19 +7,19 @@
 <meta name="description" content="플랜튜드 · 아이비에듀 · 초당약품 · 모어댄트립 광고·콘텐츠 성과 대시보드">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
   :root {
-    --font-anthropic-sans: "Noto Sans KR", system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    --font-anthropic-sans: "Pretendard", system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
     --font-anthropic-serif: "Noto Serif KR", Georgia, serif;
     --cds-font-size-caption: 12px; --cds-font-size-body: 14px; --cds-font-size-heading: 16px; --cds-font-size-title: 26px;
     --cds-font-weight-medium: 500;
     --cds-gap-xs: 4px; --cds-gap-sm: 8px; --cds-gap-md: 12px; --cds-gap-lg: 20px; --cds-gap-xl: 32px;
     --cds-pad-xs: 4px; --cds-pad-sm: 8px; --cds-pad-md: 12px; --cds-pad-lg: 16px;
     --cds-radius: 10px; --cds-dur-slow: 300ms;
-    --color-bg: #faf9f7; --color-panel: #ffffff; --color-fg: #1f1e1c; --color-fg-muted: #6b6862; --color-border-line: #e4e1db;
+    --color-bg: #f2f3f6; --color-panel: #ffffff; --color-fg: #191b1f; --color-fg-muted: #6b7280; --color-border-line: #e6e8ec;
     --color-ok: #1f7a4d; --color-warn: #a35f00; --color-bad: #c0392b;
-    --cds-chart-grid: #ece9e4; --cds-chart-axis: #b9b4ab; --cds-chart-muted: #c9c5bd; --cds-chart-status-critical: #d9534f;
+    --cds-chart-grid: #eef0f3; --cds-chart-axis: #b8bdc6; --cds-chart-muted: #c7ccd4; --cds-chart-status-critical: #d9534f;
     --cds-surface-popover: #ffffff; --cds-border: #ddd8d0; --cds-shadow-popover: 0 4px 16px rgba(0,0,0,.12); --cds-text-secondary: #6b6862;
     --skel: #ece9e4;
   }
@@ -33,7 +33,7 @@
     }
   }
   html, body { margin: 0; background: var(--color-bg); color: var(--color-fg); font-family: var(--font-anthropic-sans); -webkit-text-size-adjust: 100%; }
-  #dash-root { max-width: 1280px; margin: 0 auto; padding: 24px clamp(16px, 4vw, 40px) 48px; box-sizing: border-box; }
+  #dash-root { max-width: 1240px; margin: 0 auto; padding: 24px clamp(16px, 4vw, 40px) 48px; box-sizing: border-box; }
   .dash-skeleton { color: transparent !important; background: var(--skel); border-radius: 6px; min-height: 1.2em; animation: skel 1.4s ease-in-out infinite; }
   .b4-chart.dash-skeleton, .b4-cards.dash-skeleton, .b4-tablewrap.dash-skeleton { min-height: 200px; }
   @keyframes skel { 50% { opacity: .55; } }
@@ -45,7 +45,7 @@
 // Claude 대시보드 런타임 대신 쓰는 작은 도우미: CSV를 읽고 계산(calc)을 돌린 뒤 화면을 다시 그립니다.
 window.dash = (function () {
   var store = {}, calcs = [], subs = [];
-  var colors = ['#2f6fd6', '#e07b39', '#2e9e6f', '#c2457a', '#7a5bd1', '#b8962a', '#3c9bb0', '#8a8f98'];
+  var colors = ['#3b5bdb', '#f08c3a', '#12a37a', '#d6336c', '#7048e8', '#b8962a', '#1c9fb5', '#868e96'];
   function set(id, v) { store[id] = v; }
   return {
     colors: colors,
@@ -67,320 +67,314 @@ window.dash = (function () {
     _emit: function () { subs.forEach(function (f) { try { f(); } catch (e) { console.error(e); } }); }
   };
 })();
+window.SX_ASOF = '2026년 10월 27일';
 </script>
 </head>
 <body>
 <div id="dash-root">
 <style>
-  .b4 { font-family: var(--font-anthropic-sans); display: flex; flex-direction: column; gap: var(--cds-gap-xl); }
-  .b4-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-xs); }
-  .b4-head p { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); line-height: 1.6; }
-  .b4 b { font-weight: var(--cds-font-weight-medium); color: var(--color-fg); }
-  .b4-section { display: flex; flex-direction: column; gap: var(--cds-gap-sm); }
-  .b4-section > h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
-  .b4-controls { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 4; background: var(--color-bg); padding: var(--cds-pad-sm) 0; }
-  .b4-chips { display: flex; flex-wrap: wrap; gap: var(--cds-gap-xs); }
-  .b4-chip { font: inherit; font-size: var(--cds-font-size-caption); padding: 5px 12px; border-radius: 999px; border: 1px solid var(--color-border-line); background: var(--color-panel); color: var(--color-fg-muted); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
-  .b4-chip i { width: 8px; height: 8px; border-radius: 50%; background: var(--sw); }
-  .b4-chip[aria-pressed="true"] { color: var(--color-fg); border-color: var(--color-fg); }
-  .b4-chip[aria-pressed="false"] i { background: transparent; border: 1px solid var(--sw); }
-  .b4-select { font: inherit; font-size: var(--cds-font-size-body); padding: 6px 10px; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-bg); color: var(--color-fg); }
-  .b4-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: var(--cds-gap-md); }
-  .b4-card, .b4-panel { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); }
-  .b4-card { padding: var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-sm); border-top: 3px solid var(--sw); min-height: 18rem; }
-  .b4-card h3 { margin: 0; font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); }
-  .b4-big { font-family: var(--font-anthropic-serif); font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; line-height: 1.15; }
-  .b4-sub { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-variant-numeric: tabular-nums; min-height: 1.3em; }
-  .b4-kv { display: grid; grid-template-columns: 1fr auto; gap: 4px var(--cds-gap-sm); font-size: var(--cds-font-size-body); font-variant-numeric: tabular-nums; }
-  .b4-kv dt { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); align-self: center; }
-  .b4-kv dd { margin: 0; text-align: right; }
-  .b4-kv .b4-grp { grid-column: 1 / -1; font-size: var(--cds-font-size-caption); font-weight: var(--cds-font-weight-medium); color: var(--color-fg); margin-top: var(--cds-gap-xs); border-top: 1px solid var(--color-border-line); padding-top: var(--cds-gap-xs); }
-  .b4-wait { color: var(--color-fg-muted); font-size: var(--cds-font-size-body); line-height: 1.6; }
-  .b4-up { color: var(--color-ok); } .b4-down { color: var(--color-bad); } .b4-na { color: var(--color-fg-muted); }
-  .b4-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr)); gap: var(--cds-gap-md); }
-  .b4-panel { padding: var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-sm); min-width: 0; }
-  .b4-panel h3 { margin: 0; font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); }
-  .b4-note { margin: 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
-  .b4-seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); overflow: hidden; align-self: flex-start; }
-  .b4-seg button { font: inherit; font-size: var(--cds-font-size-caption); padding: 6px 10px; border: 0; background: transparent; color: var(--color-fg-muted); cursor: pointer; }
-  .b4-seg button[aria-pressed="true"] { background: var(--color-bg); color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
-  .b4-chart { position: relative; min-height: 280px; }
-  .b4-chart svg { display: block; overflow: visible; }
-  .b4-chart text { font-family: var(--font-anthropic-sans); }
-  .b4-legend { display: flex; flex-wrap: wrap; gap: var(--cds-gap-xs) var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
-  .b4-legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; background: var(--sw); }
-  .b4-tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); white-space: nowrap; z-index: 3; display: none; font-variant-numeric: tabular-nums; }
-  .b4-tip .b4-tip-h { color: var(--cds-text-secondary); margin-bottom: 2px; }
-  .b4-tip .b4-sw { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 6px; }
-  .b4-empty { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); padding: var(--cds-pad-md) 0; }
-  .b4-fail { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: inherit; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
-  .b4-fail::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; background: var(--color-bad); }
-  .b4-tablewrap { overflow: auto; max-height: 32rem; min-height: 6rem; }
-  .b4-table { width: 100%; border-collapse: collapse; font-size: var(--cds-font-size-body); font-variant-numeric: tabular-nums; }
-  .b4-table th { position: sticky; top: 0; background: var(--color-panel); text-align: right; font-weight: var(--cds-font-weight-medium); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); border-bottom: 1px solid var(--color-border-line); padding: 8px 10px; white-space: nowrap; z-index: 1; }
-  .b4-table td { padding: 8px 10px; border-bottom: 1px solid var(--color-border-line); text-align: right; white-space: nowrap; }
-  .b4-table th:first-child, .b4-table td:first-child { text-align: left; }
-  .b4-table td.b4-wrap { white-space: normal; text-align: left; min-width: 12rem; }
-  .b4-table th.b4-l, .b4-table td.b4-l { text-align: left; }
-  .b4-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; background: var(--sw); }
-  .b4-tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--color-border-line); overflow-x: auto; scrollbar-width: none; }
-  .b4-tab { font: inherit; font-size: var(--cds-font-size-body); padding: 10px 14px; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; background: none; color: var(--color-fg-muted); cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
-  .b4-tab i { width: 8px; height: 8px; border-radius: 50%; background: var(--sw); }
-  .b4-tab[aria-selected="true"] { color: var(--color-fg); border-bottom-color: var(--sw, var(--color-fg)); font-weight: var(--cds-font-weight-medium); }
-  .b4-page { display: flex; flex-direction: column; gap: var(--cds-gap-xl); }
-  .b4-page[hidden], .b4-chips[hidden] { display: none !important; }
-  .b4-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); gap: var(--cds-gap-md); min-height: 6rem; }
-  .b4-tile { background: var(--color-panel); border: 1px solid var(--color-border-line); border-top: 3px solid var(--sw); border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-xs); }
-  .b4-tile-l { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
-  .b4-tile-v { font-family: var(--font-anthropic-serif); font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; line-height: 1.15; }
-  .b4-tile-v.b4-na { font-family: var(--font-anthropic-sans); font-size: var(--cds-font-size-body); }
+  .sx { --sx-r: 18px; --sx-r-sm: 12px; --sx-shadow: 0 1px 2px rgba(0, 0, 0, .05); font-family: var(--font-anthropic-sans); color: var(--color-fg); display: flex; flex-direction: column; gap: 28px; }
+  .sx b { font-weight: 700; color: var(--color-fg); }
+  .sx-top { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .sx-top h1 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
+  .sx-sub { margin: 4px 0 0; font-size: 13px; color: var(--color-fg-muted); display: flex; align-items: center; gap: 6px; }
+  .sx-sub::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--color-ok); }
+  .sx-select { font: inherit; font-size: 14px; font-weight: 600; padding: 9px 14px; border: 1px solid var(--color-border-line); border-radius: 999px; background: var(--color-panel); color: var(--color-fg); cursor: pointer; }
+  .sx-tabs { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; position: sticky; top: 0; z-index: 5; background: var(--color-bg); padding-top: 6px; }
+  .sx-tab { font: inherit; font-size: 14px; font-weight: 600; padding: 9px 18px; border-radius: 999px; border: 0; background: transparent; color: var(--color-fg-muted); cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 7px; }
+  .sx-tab i { width: 8px; height: 8px; border-radius: 50%; background: var(--sw); }
+  .sx-tab:hover { background: var(--color-panel); }
+  .sx-tab[aria-selected="true"] { background: var(--color-fg); color: var(--color-bg); }
+  .sx-page { display: flex; flex-direction: column; gap: 28px; }
+  .sx-page[hidden] { display: none !important; }
+  .sx-h2 { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin: 0 0 12px; }
+  .sx-h2 h2 { margin: 0; font-size: 19px; font-weight: 800; letter-spacing: -0.01em; }
+  .sx-h2 span { font-size: 12px; color: var(--color-fg-muted); }
+  .sx-lead { margin: -6px 0 14px; font-size: 14px; color: var(--color-fg-muted); line-height: 1.6; }
+  .sx-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--sx-r); box-shadow: var(--sx-shadow); padding: 22px; min-width: 0; }
+  .sx-card h3 { margin: 0; font-size: 16px; font-weight: 700; }
+  .sx-card .sx-note { margin: 4px 0 0; font-size: 12px; color: var(--color-fg-muted); }
+  .sx-kgroup { font-size: 12px; font-weight: 700; color: var(--color-fg-muted); margin: 0 0 8px 2px; letter-spacing: .02em; }
+  .sx-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: 12px; }
+  .sx-kpis + .sx-kgroup { margin-top: 18px; }
+  .sx-kpi { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--sx-r); box-shadow: var(--sx-shadow); padding: 18px 20px; display: flex; flex-direction: column; gap: 6px; min-height: 104px; box-sizing: border-box; }
+  .sx-kpi.sx-accent { background: var(--sw); border-color: transparent; color: #fff; }
+  .sx-kpi.sx-accent .sx-kl, .sx-kpi.sx-accent .sx-ks, .sx-kpi.sx-accent .sx-kv, .sx-kpi.sx-accent b { color: #fff; }
+  .sx-kl { font-size: 13px; font-weight: 600; color: var(--color-fg-muted); }
+  .sx-kv { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; line-height: 1.15; min-height: 1.15em; }
+  .sx-kv.sx-na { font-size: 18px; font-weight: 700; color: var(--color-fg-muted); }
+  .sx-ks { font-size: 12px; color: var(--color-fg-muted); font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-height: 1.4em; }
+  .sx-pill { display: inline-flex; align-items: center; gap: 2px; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+  .sx-pill.up { color: var(--color-ok); background: color-mix(in srgb, var(--color-ok) 12%, transparent); }
+  .sx-pill.down { color: var(--color-bad); background: color-mix(in srgb, var(--color-bad) 12%, transparent); }
+  .sx-kpi.sx-accent .sx-pill { color: #fff; background: rgba(255, 255, 255, .2); }
+  .sx-grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr)); gap: 16px; }
+  .sx-cmp { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 16px; }
+  @media (max-width: 860px) { .sx-cmp { grid-template-columns: 1fr; } }
+  .sx-seg { display: inline-flex; flex-wrap: wrap; gap: 4px; background: var(--color-bg); padding: 4px; border-radius: 999px; margin-top: 12px; }
+  .sx-seg button { font: inherit; font-size: 12px; font-weight: 600; padding: 6px 12px; border: 0; border-radius: 999px; background: transparent; color: var(--color-fg-muted); cursor: pointer; }
+  .sx-seg button[aria-pressed="true"] { background: var(--color-panel); color: var(--color-fg); box-shadow: 0 1px 2px rgba(0, 0, 0, .08); }
+  .sx-blist { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; min-height: 18rem; }
+  .sx-bitem { border-radius: var(--sx-r-sm); padding: 14px 16px; background: color-mix(in srgb, var(--sw) 9%, var(--color-panel)); display: flex; flex-direction: column; gap: 2px; cursor: pointer; border: 0; text-align: left; font: inherit; color: inherit; }
+  .sx-bitem:hover { background: color-mix(in srgb, var(--sw) 15%, var(--color-panel)); }
+  .sx-bname { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 7px; }
+  .sx-bname i { width: 8px; height: 8px; border-radius: 50%; background: var(--sw); }
+  .sx-bval { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .sx-bsub { font-size: 12px; color: var(--color-fg-muted); font-variant-numeric: tabular-nums; }
+  .sx-share { display: flex; height: 10px; border-radius: 999px; overflow: hidden; gap: 2px; margin-top: 6px; }
+  .sx-share span { background: var(--sw); }
+  .sx-sharelab { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 10px; font-size: 11px; color: var(--color-fg-muted); margin-top: 6px; }
+  .sx-chart { position: relative; min-height: 290px; margin-top: 12px; }
+  .sx-chart svg { display: block; overflow: visible; }
+  .sx-chart text { font-family: var(--font-anthropic-sans); }
+  .sx-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--color-fg-muted); margin-top: 10px; }
+  .sx-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .sx-legend span::before { content: ""; width: 10px; height: 10px; border-radius: 3px; background: var(--sw); }
+  .sx-legend span.ln::before { height: 3px; border-radius: 2px; }
+  .sx-tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: 10px; box-shadow: var(--cds-shadow-popover); padding: 8px 10px; font-size: 12px; white-space: nowrap; z-index: 6; display: none; font-variant-numeric: tabular-nums; }
+  .sx-tip .h { color: var(--cds-text-secondary); margin-bottom: 3px; font-weight: 600; }
+  .sx-tip .sw { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 6px; }
+  .sx-empty { display: flex; align-items: center; justify-content: center; min-height: inherit; color: var(--color-fg-muted); font-size: 13px; text-align: center; padding: 16px; border: 1px dashed var(--color-border-line); border-radius: var(--sx-r-sm); box-sizing: border-box; }
+  .sx-fail { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: inherit; color: var(--color-fg-muted); font-size: 12px; }
+  .sx-fail::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; background: var(--color-bad); }
+  .sx-tw { overflow: auto; max-height: 30rem; margin-top: 12px; min-height: 6rem; }
+  .sx-table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+  .sx-table th { position: sticky; top: 0; background: var(--color-panel); text-align: right; font-weight: 600; font-size: 12px; color: var(--color-fg-muted); padding: 10px; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; z-index: 1; }
+  .sx-table td { padding: 11px 10px; border-bottom: 1px solid var(--color-border-line); text-align: right; white-space: nowrap; }
+  .sx-table tr:last-child td { border-bottom: 0; }
+  .sx-table .l { text-align: left; }
+  .sx-table td.w { white-space: normal; min-width: 11rem; text-align: left; }
+  .sx-table .na { color: var(--color-fg-muted); }
+  .sx-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--sw); margin-right: 7px; }
+  .sx-cb { display: inline-flex; align-items: center; justify-content: flex-end; gap: 8px; width: 100%; }
+  .sx-cb i { display: inline-block; height: 6px; border-radius: 3px; background: var(--sw); opacity: .85; flex: none; }
+  .sx-tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--color-bg); color: var(--color-fg-muted); }
+  .sx-foot { font-size: 12px; color: var(--color-fg-muted); line-height: 1.7; }
+  .sx-foot li { margin: 2px 0; }
+  .dash-skeleton.sx-blist, .dash-skeleton.sx-chart, .dash-skeleton.sx-tw { min-height: 12rem; }
   [data-dash-source-state=empty] { color: transparent; }
   [data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
-  @media (max-width: 640px) { .b4-wide { display: none; } }
+  @media (max-width: 640px) { .sx-wide { display: none; } .sx-kv { font-size: 24px; } .sx-card { padding: 16px; } }
 </style>
 
-<div class="b4">
-  <header class="b4-head" id="overview">
-    <h1>소셜링 광고본부 브랜드</h1>
-    <p class="b4-takeaway dash-skeleton" data-source="brand_period">—</p>
-  </header>
+<div class="sx">
+  <div class="sx-top" id="overview">
+    <div>
+      <h1>소셜링 광고본부 브랜드</h1>
+      <p class="sx-sub sx-status dash-skeleton" data-source="kpi">—</p>
+    </div>
+    <select class="sx-select sx-period" aria-label="기간" data-source="brand_month"></select>
+  </div>
 
-  <nav class="b4-tabs" role="tablist" aria-label="탭">
-    <button type="button" class="b4-tab" role="tab" id="tab-all" data-tab="all" aria-selected="true">전체 요약</button>
-    <button type="button" class="b4-tab" role="tab" id="tab-plantude" data-tab="plantude" aria-selected="false"><i></i>플랜튜드</button>
-    <button type="button" class="b4-tab" role="tab" id="tab-ibedu" data-tab="ibedu" aria-selected="false"><i></i>아이비에듀</button>
-    <button type="button" class="b4-tab" role="tab" id="tab-chodang" data-tab="chodang" aria-selected="false"><i></i>초당약품</button>
-    <button type="button" class="b4-tab" role="tab" id="tab-morethantrip" data-tab="morethantrip" aria-selected="false"><i></i>모어댄트립</button>
+  <nav class="sx-tabs" role="tablist" aria-label="탭">
+    <button type="button" class="sx-tab" role="tab" id="tab-all" data-tab="all" aria-selected="true">광고 본부 브랜드</button>
+    <button type="button" class="sx-tab" role="tab" id="tab-plantude" data-tab="plantude" aria-selected="false"><i></i>플랜튜드</button>
+    <button type="button" class="sx-tab" role="tab" id="tab-ibedu" data-tab="ibedu" aria-selected="false"><i></i>아이비에듀</button>
+    <button type="button" class="sx-tab" role="tab" id="tab-chodang" data-tab="chodang" aria-selected="false"><i></i>초당약품</button>
+    <button type="button" class="sx-tab" role="tab" id="tab-morethantrip" data-tab="morethantrip" aria-selected="false"><i></i>모어댄트립</button>
   </nav>
 
-  <div class="b4-controls" id="filters">
-    <div class="b4-chips" role="group" aria-label="브랜드 보이기"></div>
-    <select class="b4-select b4-period" aria-label="기간" data-source="brand_month"></select>
-  </div>
-
-  <div class="b4-page" id="page-all" role="tabpanel">
-  <section class="b4-section" id="brands">
-    <h2 class="b4-cards-title">브랜드 나란히 보기</h2>
-    <div class="b4-cards" data-source="brand_period"></div>
-  </section>
-
-  <section class="b4-section" id="ads">
-    <h2>메타 광고</h2>
-    <div class="b4-panel" id="card-ads">
-      <h3 class="b4-ads-title">월별 메타 광고</h3>
-      <p class="b4-note">브랜드별 막대(합계 지표) 또는 선(비율 지표) · CTR = 클릭 ÷ 노출, CPC = 광고비 ÷ 클릭, CPM = 광고비 ÷ 노출 × 1,000</p>
-      <div class="b4-seg b4-ads-metric" data-seg="ads" role="group" aria-label="광고 지표">
-        <button type="button" data-m="spend" aria-pressed="true">광고비</button>
-        <button type="button" data-m="impressions" aria-pressed="false">노출수</button>
-        <button type="button" data-m="clicks" aria-pressed="false">클릭수</button>
-        <button type="button" data-m="ctr" aria-pressed="false">CTR</button>
-        <button type="button" data-m="cpc" aria-pressed="false">CPC</button>
-        <button type="button" data-m="cpm" aria-pressed="false">CPM</button>
-      </div>
-      <div class="b4-legend b4-lg-ads"></div>
-      <div class="b4-chart dash-skeleton" id="chart-ads" data-source="brand_month"></div>
+  <!-- 공통 핵심 지표 (전체 탭: 4개 브랜드 합계, 브랜드 탭: 해당 브랜드) -->
+  <section id="kpis">
+    <div class="sx-h2"><h2 class="sx-kpi-title">핵심 지표</h2><span class="sx-kpi-hint"></span></div>
+    <p class="sx-lead sx-takeaway dash-skeleton" data-source="kpi">—</p>
+    <div class="sx-kgroup">인스타그램 콘텐츠 (오가닉)</div>
+    <div class="sx-kpis" data-group="content">
+      <div class="sx-kpi sx-accent" data-k="c_views"><span class="sx-kl">콘텐츠 노출·조회</span><span class="sx-kv dash-skeleton">—</span><span class="sx-ks"></span></div>
+      <div class="sx-kpi" data-k="c_reach"><span class="sx-kl">콘텐츠 도달</span><span class="sx-kv dash-skeleton">—</span><span class="sx-ks"></span></div>
+      <div class="sx-kpi" data-k="c_inter"><span class="sx-kl">인터랙션</span><span class="sx-kv dash-skeleton">—</span><span class="sx-ks"></span></div>
+      <div class="sx-kpi" data-k="eng_rate"><span class="sx-kl">인터랙션율 (인터랙션 ÷ 도달)</span><span class="sx-kv dash-skeleton">—</span><span class="sx-ks"></span></div>
+    </div>
+    <div class="sx-kgroup">메타 광고</div>
+    <div class="sx-kpis" data-group="ads">
+      <div class="sx-kpi" data-k="ad_impr"><span class="sx-kl">광고 노출</span><span class="sx-kv dash-skeleton">—</span><span class="sx-ks"></span></div>
+      <div class="sx-kpi" data-k="ad_reach"><span class="sx-kl">광고 도달</span><span class="sx-kv dash-skeleton">—</span><span class="sx-ks"></span></div>
+      <div class="sx-kpi" data-k="ad_clicks"><span class="sx-kl">광고 클릭 · CTR</span><span class="sx-kv dash-skeleton">—</span><span class="sx-ks"></span></div>
+      <div class="sx-kpi" data-k="ad_spend"><span class="sx-kl">광고비 · CPM</span><span class="sx-kv dash-skeleton">—</span><span class="sx-ks"></span></div>
     </div>
   </section>
 
-  <section class="b4-section" id="content">
-    <h2>인스타그램 콘텐츠 · 팔로워</h2>
-    <div class="b4-grid">
-      <div class="b4-panel" id="card-content">
-        <h3>월별 콘텐츠 성과</h3>
-        <p class="b4-note">발행일 기준 · 인터랙션 = 좋아요+댓글+공유+저장 · 인터랙션율 = 인터랙션 ÷ 도달</p>
-        <div class="b4-seg b4-ct-metric" data-seg="ct" role="group" aria-label="콘텐츠 지표">
-          <button type="button" data-m="posts" aria-pressed="true">발행 수</button>
-          <button type="button" data-m="views" aria-pressed="false">조회·노출</button>
-          <button type="button" data-m="content_reach" aria-pressed="false">도달</button>
-          <button type="button" data-m="interactions" aria-pressed="false">인터랙션</button>
-          <button type="button" data-m="eng_rate" aria-pressed="false">인터랙션율</button>
-        </div>
-        <div class="b4-legend b4-lg-ct"></div>
-        <div class="b4-chart dash-skeleton" id="chart-content" data-source="brand_month"></div>
-      </div>
-      <div class="b4-panel" id="card-followers">
-        <h3>팔로워 추이</h3>
-        <p class="b4-note">월말 인스타그램 팔로워(시트 일별 기록의 마지막 값)</p>
-        <div class="b4-legend b4-lg-fo"></div>
-        <div class="b4-chart dash-skeleton" id="chart-followers" data-source="brand_month"></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="b4-section" id="compare">
-    <h2 class="b4-cmp-title">브랜드 비교표</h2>
-    <div class="b4-panel" id="card-compare">
-      <p class="b4-note">위에서 고른 기간 기준 · 같은 지표를 4개 브랜드 나란히</p>
-      <div class="b4-tablewrap dash-skeleton b4-cmp-wrap" data-source="brand_period">
-        <table class="b4-table b4-cmp"><thead></thead><tbody></tbody></table>
-      </div>
-    </div>
-  </section>
-
-  <section class="b4-section" id="top">
-    <h2 class="b4-top-title">조회수 상위 콘텐츠</h2>
-    <div class="b4-panel" id="card-top">
-      <p class="b4-note">위에서 고른 기간·브랜드 기준 상위 15개</p>
-      <div class="b4-tablewrap dash-skeleton b4-top-wrap" data-source="content">
-        <table class="b4-table b4-top">
-          <thead><tr>
-            <th class="b4-l" data-field="brand">브랜드</th>
-            <th class="b4-l" data-field="published">발행일</th>
-            <th class="b4-l" data-field="title">콘텐츠</th>
-            <th data-field="views">조회·노출</th>
-            <th data-field="reach" class="b4-wide">도달</th>
-            <th data-field="interactions">인터랙션</th>
-          </tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <section class="b4-section" id="coverage">
-    <h2>데이터 범위</h2>
-    <div class="b4-panel" id="card-coverage">
-      <p class="b4-note">브랜드 시트마다 기록된 기간이 달라요 · 비어 있는 칸은 시트에 해당 기록이 없는 것</p>
-      <div class="b4-tablewrap dash-skeleton b4-cov-wrap">
-        <table class="b4-table b4-cov" data-source="coverage" data-row-key="brand">
-          <thead><tr>
-            <th class="b4-l" data-field="brand">브랜드</th>
-            <th class="b4-l" data-field="meta_range">메타 광고</th>
-            <th class="b4-l" data-field="content_range">인스타 콘텐츠</th>
-            <th class="b4-l" data-field="followers_range">팔로워</th>
-            <th class="b4-l" data-field="note">비고</th>
-          </tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-  </div>
-
-  <div class="b4-page" id="page-brand" role="tabpanel" hidden>
-    <section class="b4-section" id="brand-kpi">
-      <h2 class="b4-bk-title">핵심 지표</h2>
-      <div class="b4-tiles dash-skeleton" data-source="brand_period"></div>
-      <p class="b4-note b4-bk-note" data-source="coverage"></p>
-    </section>
-
-    <section class="b4-section" id="brand-ads">
-      <h2>메타 광고</h2>
-      <div class="b4-grid">
-        <div class="b4-panel" id="card-b-ads">
-          <h3 class="b4-bads-title">월별 메타 광고</h3>
-          <p class="b4-note">CTR = 클릭 ÷ 노출, CPC = 광고비 ÷ 클릭, CPM = 광고비 ÷ 노출 × 1,000</p>
-          <div class="b4-seg" data-seg="ads" role="group" aria-label="광고 지표">
-          <button type="button" data-m="spend" aria-pressed="true">광고비</button>
-          <button type="button" data-m="impressions" aria-pressed="false">노출수</button>
-          <button type="button" data-m="clicks" aria-pressed="false">클릭수</button>
-          <button type="button" data-m="ctr" aria-pressed="false">CTR</button>
-          <button type="button" data-m="cpc" aria-pressed="false">CPC</button>
-          <button type="button" data-m="cpm" aria-pressed="false">CPM</button>
+  <!-- 전체 탭 -->
+  <div class="sx-page" id="page-all" role="tabpanel">
+    <section id="compare">
+      <div class="sx-h2"><h2>브랜드 비교</h2><span class="sx-cmp-hint"></span></div>
+      <div class="sx-cmp">
+        <div class="sx-card" id="card-share">
+          <h3 class="sx-share-title">브랜드별 합계</h3>
+          <p class="sx-note">카드를 누르면 그 브랜드 탭으로 이동해요</p>
+          <div class="sx-seg" data-seg="metric" role="group" aria-label="비교 지표">
+            <button type="button" data-m="c_views" aria-pressed="true">콘텐츠 노출</button>
+            <button type="button" data-m="c_reach" aria-pressed="false">콘텐츠 도달</button>
+            <button type="button" data-m="c_inter" aria-pressed="false">인터랙션</button>
+            <button type="button" data-m="ad_impr" aria-pressed="false">광고 노출</button>
+            <button type="button" data-m="ad_reach" aria-pressed="false">광고 도달</button>
+            <button type="button" data-m="ad_clicks" aria-pressed="false">광고 클릭</button>
           </div>
-          <div class="b4-chart dash-skeleton" id="chart-b-ads" data-source="brand_month"></div>
+          <div class="sx-blist dash-skeleton" data-source="kpi"></div>
         </div>
-      </div>
-      <div class="b4-panel" id="card-b-campaigns">
-          <h3 class="b4-camp-title">캠페인별 집행</h3>
-          <p class="b4-note">고른 기간 · 광고비 큰 순</p>
-          <div class="b4-tablewrap dash-skeleton b4-camp-wrap" data-source="meta" style="max-height: 26rem">
-            <table class="b4-table b4-camp">
-              <thead><tr><th class="b4-l">월</th><th class="b4-l">캠페인</th><th>광고비</th><th class="b4-wide">노출</th><th>클릭</th><th>CTR</th><th class="b4-wide">CPC</th></tr></thead>
-              <tbody></tbody>
-            </table>
-          </div>
+        <div class="sx-card" id="card-trend">
+          <h3 class="sx-trend-title">월별 추이</h3>
+          <p class="sx-note">위에서 고른 지표 · 브랜드별 선 · 기록 없는 달은 비워 둠</p>
+          <div class="sx-legend sx-lg-trend"></div>
+          <div class="sx-chart dash-skeleton" id="chart-trend" data-source="brand_month" style="min-height: 290px"></div>
+        </div>
       </div>
     </section>
 
-    <section class="b4-section" id="brand-content">
-      <h2>인스타그램 콘텐츠 · 팔로워</h2>
-      <div class="b4-grid">
-        <div class="b4-panel" id="card-b-content">
-          <h3>월별 콘텐츠 성과</h3>
-          <p class="b4-note">발행일 기준 · 인터랙션 = 좋아요+댓글+공유+저장 · 인터랙션율 = 인터랙션 ÷ 도달</p>
-          <div class="b4-seg" data-seg="ct" role="group" aria-label="콘텐츠 지표">
-          <button type="button" data-m="posts" aria-pressed="true">발행 수</button>
-          <button type="button" data-m="views" aria-pressed="false">조회·노출</button>
-          <button type="button" data-m="content_reach" aria-pressed="false">도달</button>
-          <button type="button" data-m="interactions" aria-pressed="false">인터랙션</button>
-          <button type="button" data-m="eng_rate" aria-pressed="false">인터랙션율</button>
-          </div>
-          <div class="b4-chart dash-skeleton" id="chart-b-content" data-source="brand_month"></div>
-        </div>
-        <div class="b4-panel" id="card-b-followers">
-          <h3>팔로워 추이</h3>
-          <p class="b4-note">월말 인스타그램 팔로워(시트 일별 기록의 마지막 값)</p>
-          <div class="b4-chart dash-skeleton" id="chart-b-followers" data-source="brand_month"></div>
+    <section id="table">
+      <div class="sx-h2"><h2>브랜드별 성과표</h2><span class="sx-table-hint"></span></div>
+      <div class="sx-card" id="card-table">
+        <h3>노출 · 도달 · 인터랙션 한눈에</h3>
+        <p class="sx-note">막대는 같은 열 안에서의 크기 비교 · CTR = 광고 클릭 ÷ 광고 노출 · CPM = 광고비 ÷ 노출 × 1,000</p>
+        <div class="sx-tw dash-skeleton sx-cmp-wrap" data-source="kpi">
+          <table class="sx-table sx-cmp-table"><thead></thead><tbody></tbody></table>
         </div>
       </div>
-      <div class="b4-panel" id="card-b-posts">
-        <h3 class="b4-posts-title">콘텐츠 목록</h3>
-        <p class="b4-note">고른 기간 · 최근 발행 순</p>
-        <div class="b4-tablewrap dash-skeleton b4-posts-wrap" data-source="content">
-          <table class="b4-table b4-posts">
-            <thead><tr><th class="b4-l">발행일</th><th class="b4-l b4-wide">유형</th><th class="b4-l">콘텐츠</th><th>조회·노출</th><th class="b4-wide">도달</th><th>인터랙션</th><th class="b4-wide">인터랙션율</th></tr></thead>
+    </section>
+
+    <section id="top">
+      <div class="sx-h2"><h2>노출 상위 콘텐츠</h2><span class="sx-top-hint"></span></div>
+      <div class="sx-card" id="card-top">
+        <h3>4개 브랜드 콘텐츠 순위</h3>
+        <p class="sx-note">고른 기간 · 노출·조회 많은 순 10개</p>
+        <div class="sx-tw dash-skeleton sx-top-wrap" data-source="content">
+          <table class="sx-table sx-top-table">
+            <thead><tr><th class="l">브랜드</th><th class="l">콘텐츠</th><th class="l sx-wide">발행일</th><th>노출·조회</th><th class="sx-wide">도달</th><th>인터랙션</th><th class="sx-wide">인터랙션율</th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
       </div>
     </section>
   </div>
+
+  <!-- 브랜드 탭 -->
+  <div class="sx-page" id="page-brand" role="tabpanel" hidden>
+    <section id="brand-trend">
+      <div class="sx-h2"><h2 class="sx-bt-title">월별 추이</h2><span class="sx-bt-hint"></span></div>
+      <div class="sx-grid2">
+        <div class="sx-card" id="card-b-reach">
+          <h3>콘텐츠 노출 · 도달</h3>
+          <p class="sx-note">발행월 기준 · 막대 노출·조회, 선 도달</p>
+          <div class="sx-legend sx-lg-b1"></div>
+          <div class="sx-chart dash-skeleton" id="chart-b-reach" data-source="brand_month"></div>
+        </div>
+        <div class="sx-card" id="card-b-inter">
+          <h3>인터랙션</h3>
+          <p class="sx-note">막대 인터랙션(좋아요+댓글+공유+저장), 선 인터랙션율(오른쪽 축)</p>
+          <div class="sx-legend sx-lg-b2"></div>
+          <div class="sx-chart dash-skeleton" id="chart-b-inter" data-source="brand_month"></div>
+        </div>
+        <div class="sx-card" id="card-b-ads">
+          <h3>메타 광고 노출 · 도달</h3>
+          <p class="sx-note">막대 광고 노출, 선 광고 도달 · 툴팁에 광고비·클릭·CTR</p>
+          <div class="sx-legend sx-lg-b3"></div>
+          <div class="sx-chart dash-skeleton" id="chart-b-ads" data-source="brand_month"></div>
+        </div>
+        <div class="sx-card" id="card-b-eff">
+          <h3>광고 효율</h3>
+          <p class="sx-note">막대 CTR(클릭 ÷ 노출), 선 CPM(오른쪽 축)</p>
+          <div class="sx-legend sx-lg-b4"></div>
+          <div class="sx-chart dash-skeleton" id="chart-b-eff" data-source="brand_month"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="brand-content">
+      <div class="sx-h2"><h2>콘텐츠 성과</h2><span class="sx-bc-hint"></span></div>
+      <div class="sx-card" id="card-b-posts">
+        <h3 class="sx-posts-title">콘텐츠 순위</h3>
+        <p class="sx-note">고른 기간 · 노출·조회 많은 순</p>
+        <div class="sx-tw dash-skeleton sx-posts-wrap" data-source="content">
+          <table class="sx-table sx-posts">
+            <thead><tr><th class="l">콘텐츠</th><th class="l sx-wide">유형</th><th class="l sx-wide">발행일</th><th>노출·조회</th><th>도달</th><th>인터랙션</th><th class="sx-wide">인터랙션율</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="brand-campaigns">
+      <div class="sx-h2"><h2>메타 광고 캠페인</h2><span class="sx-bk-hint"></span></div>
+      <div class="sx-card" id="card-b-campaigns">
+        <h3 class="sx-camp-title">캠페인별 성과</h3>
+        <p class="sx-note">고른 기간 · 노출 많은 순</p>
+        <div class="sx-tw dash-skeleton sx-camp-wrap" data-source="meta">
+          <table class="sx-table sx-camp">
+            <thead><tr><th class="l">캠페인</th><th class="l sx-wide">월</th><th>노출</th><th>도달</th><th>클릭</th><th>CTR</th><th class="sx-wide">광고비</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section id="notes">
+    <div class="sx-card">
+      <h3>데이터 안내</h3>
+      <ul class="sx-foot sx-notes" data-source="coverage"></ul>
+    </div>
+  </section>
 </div>
 
 <script>
-window.B4_BRANDS = ['플랜튜드', '아이비에듀', '초당약품', '모어댄트립'];
+window.SX_BRANDS = ['플랜튜드', '아이비에듀', '초당약품', '모어댄트립'];
 
 dash.calc('brand_month', {
-  inputs: ['meta', 'content', 'followers'],
+  inputs: ['meta', 'content'],
   title: '브랜드별 월 지표',
-  description: '브랜드·월별 메타 광고 합계, 발행일 기준 콘텐츠 합계, 월말 팔로워. CTR = 클릭 ÷ 노출, CPC = 광고비 ÷ 클릭, CPM = 광고비 ÷ 노출 × 1000, 인터랙션율 = 인터랙션 ÷ 도달.',
-  fn: (meta, content, followers) => {
+  description: '브랜드·월별 콘텐츠(발행월 기준) 노출·도달·인터랙션과 메타 광고 노출·도달·클릭·광고비. 인터랙션율 = 인터랙션 ÷ 도달, CTR = 클릭 ÷ 노출, CPM = 광고비 ÷ 노출 × 1000.',
+  fn: (meta, content) => {
     const by = new Map();
     const get = (brand, month) => {
       const k = brand + '|' + month;
-      if (!by.has(k)) by.set(k, { brand, month, spend: 0, impressions: 0, ad_reach: 0, clicks: 0, campaigns: 0, posts: 0, posts_measured: 0, views: 0, content_reach: 0, interactions: 0, followers_end: null, _fd: '' });
+      if (!by.has(k)) by.set(k, { brand, month, posts: 0, posts_measured: 0, c_views: 0, c_reach: 0, c_inter: 0, campaigns: 0, ad_spend: 0, ad_impr: 0, ad_reach: 0, ad_clicks: 0 });
       return by.get(k);
     };
-    for (const r of meta) { const o = get(r.brand, r.month); o.spend += +r.spend || 0; o.impressions += +r.impressions || 0; o.ad_reach += +r.reach || 0; o.clicks += +r.clicks || 0; o.campaigns += 1; }
-    for (const r of content) { const o = get(r.brand, r.month); o.posts += 1; if (r.views !== '' && r.views != null) o.posts_measured += 1; o.views += +r.views || 0; o.content_reach += +r.reach || 0; o.interactions += +r.interactions || 0; }
-    for (const r of followers) { const o = get(r.brand, r.date.slice(0, 7)); if (r.date >= o._fd) { o._fd = r.date; o.followers_end = +r.followers; } }
-    return [...by.values()].sort((a, b) => (a.month < b.month ? -1 : a.month > b.month ? 1 : 0)).map(({ _fd, ...o }) => ({
+    for (const r of content) {
+      const o = get(r.brand, r.month); o.posts += 1;
+      if (r.views !== '' && r.views != null) { o.posts_measured += 1; o.c_views += +r.views || 0; o.c_reach += +r.reach || 0; o.c_inter += +r.interactions || 0; }
+    }
+    for (const r of meta) { const o = get(r.brand, r.month); o.campaigns += 1; o.ad_spend += +r.spend || 0; o.ad_impr += +r.impressions || 0; o.ad_reach += +r.reach || 0; o.ad_clicks += +r.clicks || 0; }
+    return [...by.values()].sort((a, b) => (a.month < b.month ? -1 : a.month > b.month ? 1 : 0)).map((o) => ({
       ...o,
-      ctr: o.impressions ? o.clicks / o.impressions : null,
-      cpc: o.clicks ? o.spend / o.clicks : null,
-      cpm: o.impressions ? (o.spend / o.impressions) * 1000 : null,
-      eng_rate: o.content_reach ? o.interactions / o.content_reach : null,
+      eng_rate: o.c_reach ? o.c_inter / o.c_reach : null,
+      ctr: o.ad_impr ? o.ad_clicks / o.ad_impr : null,
+      cpm: o.ad_impr ? (o.ad_spend / o.ad_impr) * 1000 : null,
     }));
   },
 });
 
-dash.calc('brand_period', {
+dash.calc('kpi', {
   inputs: ['brand_month'],
-  title: '브랜드별 기간 합계',
-  description: '4개 브랜드 × 기간(전체, 연도, 월)별 합계와 비율. 팔로워는 기간 마지막 월말 값, 증감은 기간 직전 월말 대비(없으면 기간 첫 월말 대비).',
+  title: '브랜드·기간별 합계',
+  description: '브랜드(4개 합계 포함) × 기간(전체, 연도, 월)별 합계와 비율. 월 기간에는 전월 대비 증감률(비율 지표는 %p 차이)을 함께 둡니다.',
   fn: (brand_month) => {
-    const brands = ['플랜튜드', '아이비에듀', '초당약품', '모어댄트립'];
+    const brands = ['광고본부 전체', '플랜튜드', '아이비에듀', '초당약품', '모어댄트립'];
+    const keys = ['posts', 'posts_measured', 'c_views', 'c_reach', 'c_inter', 'campaigns', 'ad_spend', 'ad_impr', 'ad_reach', 'ad_clicks'];
     const months = [...new Set(brand_month.map((r) => r.month))].sort();
     const periods = ['전체', ...new Set(months.map((m) => m.slice(0, 4)))].concat(months);
+    const agg = (rows) => {
+      const o = {}; keys.forEach((k) => (o[k] = rows.reduce((s, r) => s + r[k], 0)));
+      o.eng_rate = o.c_reach ? o.c_inter / o.c_reach : null;
+      o.ctr = o.ad_impr ? o.ad_clicks / o.ad_impr : null;
+      o.cpm = o.ad_impr ? (o.ad_spend / o.ad_impr) * 1000 : null;
+      o.reach_rate = o.c_views ? o.c_reach / o.c_views : null;
+      o.frequency = o.ad_reach ? o.ad_impr / o.ad_reach : null;
+      return o;
+    };
     const out = [];
     for (const brand of brands) {
-      const mine = brand_month.filter((r) => r.brand === brand);
+      const mine = brand === '광고본부 전체' ? brand_month : brand_month.filter((r) => r.brand === brand);
       for (const period of periods) {
-        const rows = mine.filter((r) => period === '전체' || r.month.startsWith(period));
-        const s = (k) => rows.reduce((t, r) => t + (r[k] || 0), 0);
-        const o = { brand, period, has_data: mine.length > 0, spend: s('spend'), impressions: s('impressions'), clicks: s('clicks'), campaigns: s('campaigns'), posts: s('posts'), posts_measured: s('posts_measured'), views: s('views'), content_reach: s('content_reach'), interactions: s('interactions') };
-        const fo = rows.filter((r) => r.followers_end != null);
-        o.followers_end = fo.length ? fo[fo.length - 1].followers_end : null;
-        const before = mine.filter((r) => r.followers_end != null && rows.length && r.month < rows[0].month);
-        const base = before.length ? before[before.length - 1].followers_end : fo.length ? fo[0].followers_end : null;
-        o.followers_change = o.followers_end != null && base != null && (before.length || fo.length > 1) ? o.followers_end - base : null;
-        o.ctr = o.impressions ? o.clicks / o.impressions : null;
-        o.cpc = o.clicks ? o.spend / o.clicks : null;
-        o.cpm = o.impressions ? (o.spend / o.impressions) * 1000 : null;
-        o.eng_rate = o.content_reach ? o.interactions / o.content_reach : null;
-        o.views_per_post = o.posts_measured ? o.views / o.posts_measured : null;
-        out.push(o);
+        const row = { brand, period, ...agg(mine.filter((r) => period === '전체' || r.month.startsWith(period))) };
+        const i = months.indexOf(period);
+        if (i > 0) {
+          const prev = agg(mine.filter((r) => r.month === months[i - 1]));
+          row.previous_period = months[i - 1];
+          for (const k of ['c_views', 'c_reach', 'c_inter', 'ad_impr', 'ad_reach', 'ad_clicks', 'ad_spend']) row[k + '_chg'] = prev[k] && row[k] ? row[k] / prev[k] - 1 : null;
+          for (const k of ['eng_rate', 'ctr']) row[k + '_chg'] = prev[k] != null && row[k] != null ? row[k] - prev[k] : null;
+        }
+        out.push(row);
       }
     }
     return out;
@@ -388,406 +382,431 @@ dash.calc('brand_period', {
 });
 
 dash.calc('coverage', {
-  inputs: ['meta', 'content', 'followers'],
+  inputs: ['meta', 'content'],
   title: '브랜드별 기록 기간',
-  description: '브랜드마다 시트에 기록이 있는 첫 달과 마지막 달, 연도 오기를 보정한 콘텐츠 수.',
-  fn: (meta, content, followers) => {
+  description: '브랜드마다 시트에 기록이 있는 첫 달과 마지막 달, 데이터를 보정하거나 빈 칸이 있는 부분.',
+  fn: (meta, content) => {
     const brands = ['플랜튜드', '아이비에듀', '초당약품', '모어댄트립'];
-    const range = (rows, key) => { const ms = rows.map((r) => r[key].slice(0, 7)).sort(); return ms.length ? ms[0] + ' ~ ' + ms[ms.length - 1] : ''; };
+    const range = (ms) => { ms = ms.sort(); return ms.length ? ms[0] + ' ~ ' + ms[ms.length - 1] : '없음'; };
     return brands.map((brand) => {
-      const m = meta.filter((r) => r.brand === brand), c = content.filter((r) => r.brand === brand), f = followers.filter((r) => r.brand === brand);
-      const fixed = c.filter((r) => r.note.startsWith('시트 발행일')).length;
+      const m = meta.filter((r) => r.brand === brand), c = content.filter((r) => r.brand === brand);
       const notes = [];
-      if (!m.length && !c.length && !f.length) notes.push('파일 대기 중');
+      const fixed = c.filter((r) => r.note.startsWith('시트 발행일')).length;
       if (fixed) notes.push(`콘텐츠 ${fixed}건 발행 연도 오기 보정`);
-      if (c.length && c.every((r) => r.views === '')) notes.push('콘텐츠는 발행 목록만 있고 성과 수치 없음');
-      if (m.some((r) => r.note.includes('클릭수 ='))) notes.push('광고 클릭수 = 지출 ÷ 시트 CPC');
-      if (m.some((r) => r.note.includes('위 캠페인의 달'))) notes.push('집행 일자 빈 캠페인은 바로 위 행의 달로');
-      const note = notes.join(' · ');
-      return { brand, meta_range: range(m, 'month'), content_range: range(c, 'published'), followers_range: range(f, 'date'), note };
+      if (c.length && c.every((r) => r.views === '')) notes.push('콘텐츠는 발행 목록만 있고 노출·도달 수치 없음');
+      if (m.some((r) => r.note.includes('클릭수 ='))) notes.push('광고 클릭 = 지출 ÷ 시트 CPC');
+      return { brand, meta_range: range(m.map((r) => r.month)), content_range: range(c.map((r) => r.month)), note: notes.join(' · ') };
     });
   },
 });
 
 (() => {
-  const BR = window.B4_BRANDS;
+  const BR = window.SX_BRANDS;
+  const TABS = { all: '광고본부 전체', plantude: '플랜튜드', ibedu: '아이비에듀', chodang: '초당약품', morethantrip: '모어댄트립' };
   const color = (b) => dash.colors[BR.indexOf(b) % dash.colors.length];
   const fmtInt = d3.format(',');
   const pct = (v) => (v == null ? '—' : d3.format('.2%')(v));
-  const compact = (v) => (v == null ? '—' : Math.abs(v) >= 1e4 ? new Intl.NumberFormat('ko', { notation: 'compact', maximumFractionDigits: 1 }).format(v) : fmtInt(Math.round(v)));
-  const krw = (v) => (v == null ? '—' : Math.abs(v) >= 1e8 ? d3.format(',.2f')(v / 1e8) + '억원' : Math.abs(v) >= 1e4 ? fmtInt(Math.round(v / 1e4)) + '만원' : fmtInt(Math.round(v)) + '원');
-  const won = (v) => (v == null ? '—' : fmtInt(Math.round(v)) + '원');
-  const signed = (v) => (v == null ? '—' : (v > 0 ? '+' : v < 0 ? '−' : '') + fmtInt(Math.abs(Math.round(v))));
+  const pct1 = (v) => (v == null ? '—' : d3.format('.1%')(v));
+  const kor = (v) => {
+    if (v == null || isNaN(v)) return '—';
+    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    if (a >= 1e8) return s + d3.format(',.2~f')(a / 1e8) + '억';
+    if (a >= 1e4) return s + d3.format(',.1~f')(a / 1e4) + '만';
+    return s + fmtInt(Math.round(a));
+  };
+  const won = (v) => (v == null ? '—' : kor(v) + '원');
   const ml = (m) => +m.slice(5, 7) + '월';
   const mlong = (m) => m.slice(0, 4) + '년 ' + +m.slice(5, 7) + '월';
   const plabel = (p) => (p === '전체' ? '전체 기간' : p.length === 4 ? p + '년' : mlong(p));
   const enc = encodeURIComponent;
-  const unskel = (el) => el && el.classList.remove('dash-skeleton');
-  const fail = (el) => { unskel(el); el.replaceChildren(); const d = document.createElement('div'); d.className = 'b4-fail'; d.textContent = 'Failed to load'; el.appendChild(d); };
   const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
   const mark = (e, src, field, where) => { e.setAttribute('data-source', src); e.setAttribute('data-field', field); e.setAttribute('data-where', where); return e; };
-  const cleanAxis = (g) => g.attr('font-size', null).attr('font-family', null).call((g) => g.selectAll('text').attr('fill', 'var(--color-fg-muted)').style('font-size', 'var(--cds-font-size-caption)')).call((g) => g.selectAll('.tick line').attr('stroke', 'var(--cds-chart-grid)')).call((g) => g.select('.domain').remove());
-  const textW = (svg, s) => { const t = svg.append('text').style('font-size', 'var(--cds-font-size-caption)').text(s); const w = t.node().getComputedTextLength(); t.remove(); return w; };
-  const tip = (box) => { let t = box.querySelector('.b4-tip'); if (!t) { t = el('div', 'b4-tip'); box.appendChild(t); } return t; };
+  const unskel = (e) => e && e.classList.remove('dash-skeleton');
+  const fail = (e) => { unskel(e); e.replaceChildren(el('div', 'sx-fail', 'Failed to load')); };
+  const cleanAxis = (g) => g.attr('font-size', null).attr('font-family', null).call((g) => g.selectAll('text').attr('fill', 'var(--color-fg-muted)').style('font-size', '11px')).call((g) => g.selectAll('.tick line').attr('stroke', 'var(--cds-chart-grid)')).call((g) => g.select('.domain').remove());
+  const textW = (svg, s) => { const t = svg.append('text').style('font-size', '11px').text(s); const w = t.node().getComputedTextLength(); t.remove(); return w; };
+  const tipEl = (box) => { let t = box.querySelector('.sx-tip'); if (!t) { t = el('div', 'sx-tip'); box.appendChild(t); } return t; };
   const showTip = (box, t, x, y, head, lines) => {
-    t.replaceChildren(el('div', 'b4-tip-h', head));
-    lines.forEach(([c, n, v]) => { const l = el('div'); if (c) { const s = el('span', 'b4-sw'); s.style.background = c; l.appendChild(s); } l.appendChild(document.createTextNode(n + '  ' + v)); t.appendChild(l); });
+    t.replaceChildren(el('div', 'h', head));
+    lines.forEach(([c, n, v]) => { const l = el('div'); if (c) { const s = el('span', 'sw'); s.style.background = c; l.appendChild(s); } l.appendChild(document.createTextNode(n + '  ' + v)); t.appendChild(l); });
     t.style.display = 'block';
     t.style.left = Math.max(0, Math.min(box.clientWidth - t.offsetWidth, x - t.offsetWidth / 2)) + 'px';
-    t.style.top = Math.max(0, y - t.offsetHeight - 10) + 'px';
+    t.style.top = Math.max(0, y - t.offsetHeight - 12) + 'px';
   };
-  const legend = (node, brands) => node.replaceChildren(...brands.map((b) => { const s = el('span', null, b); s.style.setProperty('--sw', color(b)); return s; }));
+  const legend = (node, items) => node.replaceChildren(...items.map(([n, c, ln]) => { const s = el('span', ln ? 'ln' : null, n); s.style.setProperty('--sw', c); return s; }));
+  const emptyBox = (box, text) => { box.querySelector('svg')?.remove(); box.querySelectorAll('.sx-empty').forEach((e) => e.remove()); box.appendChild(el('div', 'sx-empty', text)); };
+  const emptyRow = (tb, n, text) => { const tr = el('tr'); const td = el('td', 'na', text); td.colSpan = n; td.style.textAlign = 'center'; tr.appendChild(td); tb.replaceChildren(tr); };
+  const cellBar = (text, v, max, c) => { const w = el('span', 'sx-cb'); const i = el('i'); i.style.width = Math.max(2, (max ? v / max : 0) * 56) + 'px'; i.style.setProperty('--sw', c); w.append(i, el('span', null, text)); return w; };
 
-  const TABS = { all: '전체', plantude: '플랜튜드', ibedu: '아이비에듀', chodang: '초당약품', morethantrip: '모어댄트립' };
-  const state = { period: null, show: new Set(BR), ads: 'spend', ct: 'posts', tab: TABS[location.hash.slice(1)] ? location.hash.slice(1) : 'all' };
-  document.querySelectorAll('.b4-tab').forEach((b) => b.addEventListener('click', () => { state.tab = b.dataset.tab; dash.setLink(b.id); draw(); }));
-  const sel = document.querySelector('.b4-period');
-  sel.addEventListener('change', () => { state.period = sel.value; draw(); });
-  const seg = (key) => document.querySelectorAll(`[data-seg="${key}"] button`).forEach((b) => b.addEventListener('click', () => { state[key] = b.dataset.m; document.querySelectorAll(`[data-seg="${key}"] button`).forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.m === state[key]))); draw(); }));
-  seg('ads'); seg('ct');
+  const METRIC = {
+    c_views: { label: '콘텐츠 노출·조회', f: kor, need: 'posts_measured', unit: '' },
+    c_reach: { label: '콘텐츠 도달', f: kor, need: 'posts_measured' },
+    c_inter: { label: '인터랙션', f: (v) => fmtInt(v), need: 'posts_measured' },
+    ad_impr: { label: '광고 노출', f: kor, need: 'campaigns' },
+    ad_reach: { label: '광고 도달', f: kor, need: 'campaigns' },
+    ad_clicks: { label: '광고 클릭', f: (v) => fmtInt(v), need: 'campaigns' },
+  };
 
-  const shown = () => BR.filter((b) => state.show.has(b));
+  const hashTab = location.hash.slice(1).replace(/^tab-/, '');
+  const state = { tab: TABS[hashTab] ? hashTab : 'all', period: null, metric: 'c_views' };
+  const brandName = () => TABS[state.tab];
   const inPeriod = (m) => state.period === '전체' || m.startsWith(state.period);
-  const chartMonths = (all) => {
-    if (state.period === '전체') return all;
-    const y = state.period.slice(0, 4);
-    return all.filter((m) => m.startsWith(y));
-  };
+  const chartMonths = (all) => (state.period === '전체' ? all : all.filter((m) => m.startsWith(state.period.slice(0, 4))));
+  const setTab = (key) => { state.tab = key; dash.setLink('tab-' + key); draw(); };
 
-  function drawControls(bm) {
-    const chips = document.querySelector('.b4-chips');
-    chips.replaceChildren(...BR.map((b) => {
-      const c = el('button', 'b4-chip'); c.type = 'button'; c.setAttribute('aria-pressed', String(state.show.has(b)));
-      const i = el('i'); i.style.setProperty('--sw', color(b)); c.append(i, b);
-      c.addEventListener('click', () => { if (state.show.has(b) && state.show.size > 1) state.show.delete(b); else state.show.add(b); draw(); });
-      return c;
-    }));
-    if (bm.status !== 'ok') return;
-    const months = [...new Set(bm.data.map((r) => r.month))].sort();
-    const years = [...new Set(months.map((m) => m.slice(0, 4)))];
-    if (state.period == null) state.period = years.includes('2026') ? '2026' : '전체';
-    sel.replaceChildren(new Option('전체 기간', '전체'), ...[...years].reverse().map((y) => new Option(y + '년', y)), ...[...months].reverse().map((m) => new Option(mlong(m), m)));
-    sel.value = state.period;
-  }
+  document.querySelectorAll('.sx-tab').forEach((b) => b.addEventListener('click', () => setTab(b.dataset.tab)));
+  const sel = document.querySelector('.sx-period');
+  sel.addEventListener('change', () => { state.period = sel.value; draw(); });
+  document.querySelectorAll('[data-seg="metric"] button').forEach((b) => b.addEventListener('click', () => {
+    state.metric = b.dataset.m;
+    document.querySelectorAll('[data-seg="metric"] button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    draw();
+  }));
 
-  function drawHeader(bp) {
-    const p = document.querySelector('.b4-takeaway');
-    if (bp.status === 'error') return fail(p);
-    if (bp.status !== 'ok') return;
-    unskel(p);
-    const rows = bp.data.filter((r) => r.period === state.period);
-    const live = rows.filter((r) => r.has_data), wait = rows.filter((r) => !r.has_data);
-    const b = (r, field, text) => mark(el('b', null, text), 'brand_period', field, `brand=${enc(r.brand)}&period=${enc(r.period)}`);
-    const parts = [plabel(state.period) + ' 기준 '];
-    live.forEach((r, i) => {
-      parts.push((i ? ', ' : '') + r.brand + ' ');
-      if (r.campaigns) parts.push('메타 광고비 ', b(r, 'spend', krw(r.spend))); else parts.push('메타 광고 기록 없음');
-      if (r.posts) parts.push('·콘텐츠 ', b(r, 'posts', fmtInt(r.posts) + '건')); else parts.push('·콘텐츠 기록 없음');
-    });
-    parts.push('.');
-    if (wait.length) parts.push(' ' + wait.map((r) => r.brand).join('·') + '는 시트 파일을 받으면 같은 칸에 채워져요.');
-    p.replaceChildren(...parts);
-  }
-
-  function drawCards(bp) {
-    const box = document.querySelector('.b4-cards');
-    document.querySelector('.b4-cards-title').textContent = '브랜드 나란히 보기 · ' + plabel(state.period || '전체');
-    if (bp.status === 'error') return fail(box);
-    if (bp.status !== 'ok') { if (!box.children.length) box.replaceChildren(...BR.map((b) => { const c = el('div', 'b4-card'); c.style.setProperty('--sw', color(b)); c.append(el('h3', null, b), el('div', 'b4-big dash-skeleton', '—')); return c; })); return; }
-    box.replaceChildren(...shown().map((brand) => {
-      const r = bp.data.find((x) => x.brand === brand && x.period === state.period);
-      const card = el('div', 'b4-card'); card.style.setProperty('--sw', color(brand));
-      card.appendChild(el('h3', null, brand));
-      if (!r || !r.has_data) { card.appendChild(el('p', 'b4-wait', '아직 시트 파일을 받지 않았어요. 엑셀로 올려 주시면 이 칸에 같은 지표가 채워져요.')); return card; }
-      const w = `brand=${enc(brand)}&period=${enc(r.period)}`;
-      const big = el('div', 'b4-big'); mark(big, 'brand_period', 'followers_end', w); big.textContent = r.followers_end == null ? '—' : fmtInt(r.followers_end);
-      const sub = el('div', 'b4-sub');
-      if (r.followers_end == null) sub.textContent = '이 기간 팔로워 기록 없음';
-      else { const ch = mark(el('span', r.followers_change > 0 ? 'b4-up' : r.followers_change < 0 ? 'b4-down' : 'b4-na', signed(r.followers_change)), 'brand_period', 'followers_change', w); sub.append('인스타 팔로워 · 기간 증감 ', ch); }
-      const dl = el('dl', 'b4-kv');
-      const row = (label, field, text, cls) => { dl.append(el('dt', null, label)); const dd = el('dd', cls, text); mark(dd, 'brand_period', field, w); dl.append(dd); };
-      dl.append(el('div', 'b4-grp', '인스타 콘텐츠'));
-      if (r.posts) {
-        row('발행 수', 'posts', fmtInt(r.posts) + '건');
-        if (r.posts_measured) {
-          row('조회·노출', 'views', compact(r.views));
-          row('콘텐츠당 조회', 'views_per_post', compact(r.views_per_post));
-          row('인터랙션율', 'eng_rate', pct(r.eng_rate));
-        } else dl.append(el('dt', null, '성과 수치'), el('dd', 'b4-na', '시트에 없음'));
-      } else { dl.append(el('dt', null, '이 기간 기록 없음'), el('dd', 'b4-na', '')); }
-      dl.append(el('div', 'b4-grp', '메타 광고'));
-      if (r.campaigns) {
-        row('광고비', 'spend', krw(r.spend));
-        row('클릭', 'clicks', fmtInt(r.clicks));
-        row('CTR', 'ctr', pct(r.ctr));
-        row('CPC', 'cpc', won(r.cpc));
-      } else { dl.append(el('dt', null, '이 기간 기록 없음'), el('dd', 'b4-na', '')); }
-      card.append(big, sub, dl);
-      return card;
-    }));
-  }
-
-  const isRate = { ctr: true, cpc: true, cpm: true, eng_rate: true };
-  const fmtM = { spend: krw, impressions: compact, clicks: (v) => fmtInt(v), ctr: pct, cpc: won, cpm: won, posts: (v) => fmtInt(v) + '건', views: compact, content_reach: compact, interactions: compact, eng_rate: pct, followers_end: (v) => fmtInt(v) };
-  const axisF = { spend: (v) => compact(v), ctr: d3.format('.1%'), eng_rate: d3.format('.1%'), cpc: compact, cpm: compact };
-
-  function brandChart(box, bm, metric, need, lgNode, only) {
-    if (bm.status === 'error') return fail(box);
-    if (bm.status !== 'ok') return;
-    unskel(box); box.querySelector('svg')?.remove(); box.querySelector('.b4-empty')?.remove();
-    const brands = only || shown();
-    if (lgNode) legend(lgNode, brands);
-    const allMonths = [...new Set(bm.data.map((r) => r.month))].sort();
-    const months = chartMonths(allMonths);
-    const val = (b, m) => { const r = bm.data.find((x) => x.brand === b && x.month === m); return r && need(r) ? r[metric] : null; };
-    const has = brands.some((b) => months.some((m) => val(b, m) != null));
-    if (!has) { box.appendChild(el('div', 'b4-empty', '고른 기간에 이 지표 기록이 있는 브랜드가 없어요')); return; }
-    const W = box.clientWidth || 400, H = 280, mb = 24;
-    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`);
-    const maxV = d3.max(brands, (b) => d3.max(months, (m) => val(b, m))) || 1;
-    const y = d3.scaleLinear([0, maxV * 1.08], [H - mb, 8]).nice();
-    const yf = axisF[metric] || compact;
-    const mL = Math.ceil(d3.max(y.ticks(5), (t) => textW(svg, yf(t)))) + 10;
-    const x = d3.scaleBand(months, [mL, W - 8]).paddingInner(0.2).paddingOuter(0.1);
-    const step = Math.max(1, Math.ceil(months.length / Math.max(1, Math.floor((W - mL) / 44))));
-    svg.append('g').attr('transform', `translate(${mL},0)`).call(d3.axisLeft(y).ticks(5).tickSize(-(W - 8 - mL)).tickFormat(yf)).call(cleanAxis);
-    svg.append('g').attr('transform', `translate(0,${H - mb})`).call(d3.axisBottom(x).tickSize(0).tickPadding(8).tickValues(months.filter((m, i) => i % step === 0)).tickFormat((m) => (m.endsWith('-01') || months.indexOf(m) === 0 ? m.slice(2, 4) + '.' : '') + ml(m))).call(cleanAxis);
-    const hi = (m) => state.period.length === 7 ? (m === state.period ? 1 : 0.3) : 1;
-    if (isRate[metric]) {
-      brands.forEach((b) => {
-        const pts = months.map((m) => ({ m, v: val(b, m) }));
-        svg.append('path').datum(pts).attr('fill', 'none').attr('stroke', color(b)).attr('stroke-width', 2).attr('stroke-linecap', 'round').attr('stroke-linejoin', 'round').attr('d', d3.line().defined((d) => d.v != null).x((d) => x(d.m) + x.bandwidth() / 2).y((d) => y(d.v)));
-        svg.append('g').selectAll('circle').data(pts.filter((d) => d.v != null)).join('circle').attr('cx', (d) => x(d.m) + x.bandwidth() / 2).attr('cy', (d) => y(d.v)).attr('r', 3).attr('fill', color(b)).attr('opacity', (d) => hi(d.m));
-      });
-    } else {
-      const inner = d3.scaleBand(brands, [0, x.bandwidth()]).padding(0.12);
-      const bw = Math.min(brands.length === 1 ? 28 : 14, inner.bandwidth());
-      months.forEach((m) => {
-        brands.forEach((b) => {
-          const v = val(b, m); if (v == null) return;
-          svg.append('rect').attr('x', x(m) + inner(b) + (inner.bandwidth() - bw) / 2).attr('width', bw).attr('y', y(v)).attr('height', Math.max(0, y(0) - y(v))).attr('rx', 2).attr('fill', color(b)).attr('opacity', hi(m));
-        });
-      });
-    }
-    const t = tip(box);
-    svg.append('g').selectAll('rect').data(months).join('rect').attr('x', (m) => x(m) - (x.step() - x.bandwidth()) / 2).attr('width', x.step()).attr('y', 0).attr('height', H - mb).attr('fill', 'transparent')
-      .on('mousemove', (e, m) => showTip(box, t, x(m) + x.bandwidth() / 2, y(d3.max(brands, (b) => val(b, m)) || 0), mlong(m), brands.map((b) => [color(b), b, val(b, m) == null ? '기록 없음' : fmtM[metric](val(b, m))])))
-      .on('mouseleave', () => { t.style.display = 'none'; });
-  }
-
-  function drawFollowers(bm, boxId = 'chart-followers', only) {
-    const box = document.getElementById(boxId);
-    if (bm.status === 'error') return fail(box);
-    if (bm.status !== 'ok') return;
-    unskel(box); box.querySelector('svg')?.remove(); box.querySelector('.b4-empty')?.remove();
-    const brands = (only || shown()).filter((b) => bm.data.some((r) => r.brand === b && r.followers_end != null));
-    if (!only) legend(document.querySelector('.b4-lg-fo'), brands);
-    const months = chartMonths([...new Set(bm.data.map((r) => r.month))].sort());
-    const val = (b, m) => { const r = bm.data.find((x) => x.brand === b && x.month === m); return r ? r.followers_end : null; };
-    if (!brands.some((b) => months.some((m) => val(b, m) != null))) { box.appendChild(el('div', 'b4-empty', '고른 기간에 팔로워 기록이 없어요')); return; }
-    const W = box.clientWidth || 400, H = 280, mb = 24;
-    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`);
-    const y = d3.scaleLinear([0, (d3.max(brands, (b) => d3.max(months, (m) => val(b, m))) || 1) * 1.08], [H - mb, 8]).nice();
-    const mL = Math.ceil(d3.max(y.ticks(5), (t) => textW(svg, compact(t)))) + 10;
-    const lastLab = (b) => { const pts = months.filter((m) => val(b, m) != null); return pts.length ? b + ' ' + compact(val(b, pts[pts.length - 1])) : ''; };
-    const mR = Math.ceil(d3.max(brands, (b) => textW(svg, lastLab(b)))) + 12;
-    const x = d3.scalePoint(months, [mL + 6, W - mR]);
-    const step = Math.max(1, Math.ceil(months.length / Math.max(1, Math.floor((W - mL - mR) / 44))));
-    svg.append('g').attr('transform', `translate(${mL},0)`).call(d3.axisLeft(y).ticks(5).tickSize(-(W - mR - mL)).tickFormat(compact)).call(cleanAxis);
-    svg.append('g').attr('transform', `translate(0,${H - mb})`).call(d3.axisBottom(x).tickSize(0).tickPadding(8).tickValues(months.filter((m, i) => i % step === 0)).tickFormat((m) => (m.endsWith('-01') || months.indexOf(m) === 0 ? m.slice(2, 4) + '.' : '') + ml(m))).call(cleanAxis);
-    const ends = [];
-    brands.forEach((b) => {
-      const pts = months.map((m) => ({ m, v: val(b, m) })).filter((d) => d.v != null);
-      svg.append('path').datum(pts).attr('fill', 'none').attr('stroke', color(b)).attr('stroke-width', 2).attr('stroke-linecap', 'round').attr('stroke-linejoin', 'round').attr('d', d3.line().x((d) => x(d.m)).y((d) => y(d.v)));
-      if (pts.length) ends.push({ b, x: x(pts[pts.length - 1].m), y: y(pts[pts.length - 1].v) });
-    });
-    ends.sort((a, b) => a.y - b.y);
-    for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 14) ends[i].y = ends[i - 1].y + 14;
-    ends.forEach((e) => svg.append('text').attr('x', W - mR + 6).attr('y', e.y).attr('dy', '0.35em').attr('fill', color(e.b)).style('font-size', 'var(--cds-font-size-caption)').text(lastLab(e.b)));
-    const t = tip(box);
-    const rule = svg.append('line').attr('y1', 8).attr('y2', H - mb).attr('stroke', 'var(--cds-chart-axis)').attr('opacity', 0);
-    svg.append('rect').attr('x', mL).attr('width', W - mL - mR).attr('y', 0).attr('height', H - mb).attr('fill', 'transparent')
-      .on('mousemove', (e) => { const [px] = d3.pointer(e); const m = months[d3.minIndex(months, (mm) => Math.abs(x(mm) - px))]; rule.attr('x1', x(m)).attr('x2', x(m)).attr('opacity', 1); showTip(box, t, x(m), 20, mlong(m) + ' 월말', brands.map((b) => [color(b), b, val(b, m) == null ? '기록 없음' : fmtInt(val(b, m))])); })
-      .on('mouseleave', () => { rule.attr('opacity', 0); t.style.display = 'none'; });
-  }
-
-  function drawCompare(bp) {
-    const wrap = document.querySelector('.b4-cmp-wrap'), table = document.querySelector('.b4-cmp');
-    document.querySelector('.b4-cmp-title').textContent = '브랜드 비교표 · ' + plabel(state.period || '전체');
-    if (bp.status === 'error') { unskel(wrap); table.querySelector('tbody').replaceChildren(); return; }
-    if (bp.status !== 'ok') return;
-    unskel(wrap);
-    const brands = shown();
-    const rows = brands.map((b) => bp.data.find((r) => r.brand === b && r.period === state.period));
-    const hr = el('tr'); hr.appendChild(el('th', null, '지표'));
-    brands.forEach((b) => { const th = el('th'); const d = el('span', 'b4-dot'); d.style.setProperty('--sw', color(b)); th.append(d, b); hr.appendChild(th); });
-    table.querySelector('thead').replaceChildren(hr);
-    const metrics = [['followers_end', '팔로워 (기간 말)', (v) => fmtInt(v)], ['followers_change', '팔로워 증감', signed], ['posts', '콘텐츠 발행', (v) => fmtInt(v) + '건'], ['views', '조회·노출', compact], ['views_per_post', '콘텐츠당 조회', compact], ['interactions', '인터랙션', compact], ['eng_rate', '인터랙션율', pct], ['spend', '메타 광고비', won], ['impressions', '광고 노출', compact], ['clicks', '광고 클릭', (v) => fmtInt(v)], ['ctr', 'CTR', pct], ['cpc', 'CPC', won], ['cpm', 'CPM', won]];
-    const zeroIsMissing = { posts: 'posts', views: 'posts_measured', views_per_post: 'posts_measured', interactions: 'posts_measured', eng_rate: 'posts_measured', spend: 'campaigns', impressions: 'campaigns', clicks: 'campaigns', ctr: 'campaigns', cpc: 'campaigns', cpm: 'campaigns' };
-    table.querySelector('tbody').replaceChildren(...metrics.map(([k, label, f]) => {
-      const tr = el('tr'); tr.appendChild(el('td', null, label));
-      rows.forEach((r) => {
-        const missing = !r || !r.has_data || r[k] == null || (zeroIsMissing[k] && !r[zeroIsMissing[k]]);
-        const td = el('td', missing ? 'b4-na' : k === 'followers_change' ? (r[k] > 0 ? 'b4-up' : r[k] < 0 ? 'b4-down' : '') : '', missing ? (r && !r.has_data ? '대기' : '—') : f(r[k]));
-        if (!missing) mark(td, 'brand_period', k, `brand=${enc(r.brand)}&period=${enc(r.period)}`);
-        tr.appendChild(td);
-      });
-      return tr;
-    }));
-  }
-
-  function drawTop(ct) {
-    const wrap = document.querySelector('.b4-top-wrap'), tb = document.querySelector('.b4-top tbody');
-    document.querySelector('.b4-top-title').textContent = '조회수 상위 콘텐츠 · ' + plabel(state.period || '전체');
-    if (ct.status === 'error') { unskel(wrap); tb.replaceChildren(); return; }
-    if (ct.status !== 'ok' || state.period == null) return;
-    unskel(wrap);
-    const rows = ct.data.filter((r) => state.show.has(r.brand) && inPeriod(r.month) && r.views !== '').sort((a, b) => +b.views - +a.views).slice(0, 15);
-    if (!rows.length) { tb.replaceChildren((() => { const tr = el('tr'); const td = el('td', 'b4-na', '고른 기간에 콘텐츠 기록이 없어요'); td.colSpan = 6; tr.appendChild(td); return tr; })()); return; }
-    tb.replaceChildren(...rows.map((r) => {
-      const tr = el('tr');
-      const b = el('td'); const d = el('span', 'b4-dot'); d.style.setProperty('--sw', color(r.brand)); b.append(d, r.brand); tr.appendChild(b);
-      tr.append(el('td', 'b4-l', r.published), el('td', 'b4-wrap', r.title), el('td', null, fmtInt(+r.views)), el('td', 'b4-wide', r.reach === '' ? '—' : fmtInt(+r.reach)), el('td', null, fmtInt(+r.interactions)));
-      return tr;
-    }));
-  }
-
-  function drawCoverage(cv) {
-    const wrap = document.querySelector('.b4-cov-wrap'), tb = document.querySelector('.b4-cov tbody');
-    if (cv.status === 'error') { unskel(wrap); tb.replaceChildren(); return; }
-    if (cv.status !== 'ok') return;
-    unskel(wrap);
-    tb.replaceChildren(...cv.data.map((r) => { const tr = el('tr'); tr.dataset.key = r.brand; tr.append(el('td', null, r.brand), el('td', 'b4-l' + (r.meta_range ? '' : ' b4-na'), r.meta_range || '없음'), el('td', 'b4-l' + (r.content_range ? '' : ' b4-na'), r.content_range || '없음'), el('td', 'b4-l' + (r.followers_range ? '' : ' b4-na'), r.followers_range || '없음'), el('td', 'b4-l b4-wrap', r.note)); return tr; }));
-  }
-
-  function drawTabs() {
-    document.querySelectorAll('.b4-tab').forEach((b) => {
+  function drawShell(bm) {
+    document.querySelectorAll('.sx-tab').forEach((b) => {
       b.setAttribute('aria-selected', String(b.dataset.tab === state.tab));
       if (b.dataset.tab !== 'all') b.style.setProperty('--sw', color(TABS[b.dataset.tab]));
     });
     document.getElementById('page-all').hidden = state.tab !== 'all';
     document.getElementById('page-brand').hidden = state.tab === 'all';
-    document.querySelector('.b4-chips').hidden = state.tab !== 'all';
+    if (bm.status !== 'ok') return;
+    const months = [...new Set(bm.data.map((r) => r.month))].sort();
+    const years = [...new Set(months.map((m) => m.slice(0, 4)))];
+    if (state.period == null) state.period = years.includes('2026') ? '2026' : '전체';
+    sel.replaceChildren(...[...years].reverse().map((y) => new Option(y + '년 전체', y)), new Option('전체 기간', '전체'), ...[...months].reverse().map((m) => new Option(mlong(m), m)));
+    sel.value = state.period;
   }
 
-  function drawBrand(bm, bp) {
-    const brand = TABS[state.tab];
-    document.getElementById('page-brand').style.setProperty('--sw', color(brand));
-    const p = document.querySelector('.b4-takeaway'), tiles = document.querySelector('.b4-tiles');
-    document.querySelector('.b4-bk-title').textContent = `${brand} 핵심 지표 · ${plabel(state.period || '전체')}`;
-    if (bp.status === 'error') { fail(p); fail(tiles); }
-    else if (bp.status === 'ok' && state.period) {
-      unskel(p); unskel(tiles);
-      const r = bp.data.find((x) => x.brand === brand && x.period === state.period);
-      const w = `brand=${enc(brand)}&period=${enc(state.period)}`;
-      const b = (field, text) => mark(el('b', null, text), 'brand_period', field, w);
-      const parts = [`${plabel(state.period)} ${brand}: `];
-      if (r.campaigns) parts.push('메타 광고비 ', b('spend', krw(r.spend)), ', 클릭 ', b('clicks', fmtInt(r.clicks)), ' (CTR ', b('ctr', pct(r.ctr)), ')'); else parts.push('메타 광고 기록 없음');
-      parts.push(' · ');
-      if (r.posts) { parts.push('콘텐츠 ', b('posts', fmtInt(r.posts) + '건')); if (r.posts_measured) parts.push(', 조회·노출 ', b('views', compact(r.views))); } else parts.push('콘텐츠 기록 없음');
-      if (r.followers_end != null) parts.push(' · 팔로워 ', b('followers_end', fmtInt(r.followers_end)));
-      parts.push('.');
-      p.replaceChildren(...parts);
-      const defs = [
-        ['followers_end', '인스타 팔로워 (기간 말)', (v) => fmtInt(v), r.followers_end != null],
-        ['followers_change', '팔로워 증감', signed, r.followers_change != null],
-        ['posts', '콘텐츠 발행', (v) => fmtInt(v) + '건', r.posts > 0],
-        ['views', '조회·노출', compact, r.posts_measured > 0],
-        ['eng_rate', '인터랙션율', pct, r.posts_measured > 0 && r.eng_rate != null],
-        ['spend', '메타 광고비', krw, r.campaigns > 0],
-        ['clicks', '광고 클릭', (v) => fmtInt(v), r.campaigns > 0],
-        ['ctr', 'CTR', pct, r.campaigns > 0 && r.ctr != null],
-        ['cpc', 'CPC', won, r.campaigns > 0 && r.cpc != null],
-      ];
-      tiles.replaceChildren(...defs.map(([k, label, f, ok]) => {
-        const tile = el('div', 'b4-tile');
-        const cls = !ok ? ' b4-na' : k === 'followers_change' ? (r[k] > 0 ? ' b4-up' : r[k] < 0 ? ' b4-down' : '') : '';
-        const v = el('span', 'b4-tile-v' + cls, ok ? f(r[k]) : '기록 없음');
-        if (ok) mark(v, 'brand_period', k, w);
-        tile.append(el('span', 'b4-tile-l', label), v);
-        return tile;
-      }));
-    }
-    const cv = dash.data('coverage'), note = document.querySelector('.b4-bk-note');
-    if (cv.status === 'ok') {
-      const c = cv.data.find((x) => x.brand === brand);
-      note.textContent = c ? `시트 기록 기간 · 메타 광고 ${c.meta_range || '없음'} · 인스타 콘텐츠 ${c.content_range || '없음'} · 팔로워 ${c.followers_range || '없음'}${c.note ? ' · ' + c.note : ''}` : '';
-    }
-    document.querySelector('.b4-bads-title').textContent = '월별 메타 광고 · ' + (state.period && state.period !== '전체' ? state.period.slice(0, 4) + '년' : '전체 기간');
-    brandChart(document.getElementById('chart-b-ads'), bm, state.ads, (r) => r.campaigns > 0, null, [brand]);
-    brandChart(document.getElementById('chart-b-content'), bm, state.ct, (r) => (state.ct === 'posts' ? r.posts > 0 : r.posts_measured > 0), null, [brand]);
-    drawFollowers(bm, 'chart-b-followers', [brand]);
-    drawCampaigns(dash.data('meta'), brand);
-    drawPosts(dash.data('content'), brand);
+  function drawStatus(kpi) {
+    const s = document.querySelector('.sx-status');
+    if (kpi.status === 'error') return fail(s);
+    if (kpi.status !== 'ok') return;
+    unskel(s);
+    s.textContent = (window.SX_ASOF ? '데이터 기준 ' + window.SX_ASOF + ' · ' : '') + '플랜튜드 · 아이비에듀 · 초당약품 · 모어댄트립 운영 시트';
   }
 
-  const emptyRow = (tb, n, text) => { const tr = el('tr'); const td = el('td', 'b4-na', text); td.colSpan = n; tr.appendChild(td); tb.replaceChildren(tr); };
+  function drawKpis(kpi) {
+    const brand = brandName();
+    const all = state.tab === 'all';
+    const accent = all ? dash.colors[0] : color(brand);
+    document.querySelector('.sx-kpi-title').textContent = (all ? '4개 브랜드 합계' : brand) + ' · ' + plabel(state.period || '전체');
+    document.querySelector('.sx-kpi-hint').textContent = state.period && state.period.length === 7 ? '전월 대비 증감 표시' : '';
+    document.querySelectorAll('.sx-kpi').forEach((k) => k.style.setProperty('--sw', accent));
+    const lead = document.querySelector('.sx-takeaway');
+    if (kpi.status === 'error') { fail(lead); document.querySelectorAll('.sx-kv').forEach(fail); return; }
+    if (kpi.status !== 'ok' || state.period == null) return;
+    const r = kpi.data.find((x) => x.brand === brand && x.period === state.period);
+    const w = `brand=${enc(brand)}&period=${enc(state.period)}`;
+    const B = (field, text) => mark(el('b', null, text), 'kpi', field, w);
+    unskel(lead);
+    const parts = [];
+    if (r.posts_measured) parts.push('콘텐츠 ', B('posts', fmtInt(r.posts) + '건'), '이 ', B('c_views', kor(r.c_views)), '회 노출되고 ', B('c_reach', kor(r.c_reach)), '명에게 도달했어요 (인터랙션율 ', B('eng_rate', pct(r.eng_rate)), '). ');
+    else if (r.posts) parts.push('콘텐츠 ', B('posts', fmtInt(r.posts) + '건'), '을 발행했지만 노출·도달 수치는 시트에 없어요. ');
+    else parts.push('이 기간 콘텐츠 기록이 없어요. ');
+    if (r.campaigns) parts.push('메타 광고는 ', B('ad_spend', won(r.ad_spend)), '으로 ', B('ad_impr', kor(r.ad_impr)), '회 노출, 클릭 ', B('ad_clicks', fmtInt(r.ad_clicks)), '회 (CTR ', B('ctr', pct(r.ctr)), ').');
+    else parts.push('메타 광고 기록은 없어요.');
+    lead.replaceChildren(...parts);
+    const chg = (k, isRate) => {
+      const c = r[k + '_chg'];
+      if (state.period.length !== 7 || c == null) return null;
+      const p = el('span', 'sx-pill ' + (c >= 0 ? 'up' : 'down'), (c >= 0 ? '▲ ' : '▼ ') + (isRate ? d3.format('.2f')(Math.abs(c) * 100) + '%p' : d3.format('.1%')(Math.abs(c))));
+      mark(p, 'kpi', k + '_chg', w);
+      return p;
+    };
+    const def = {
+      c_views: [r.posts_measured > 0, () => kor(r.c_views), () => [chg('c_views'), `콘텐츠 ${fmtInt(r.posts_measured)}건 기준`]],
+      c_reach: [r.posts_measured > 0, () => kor(r.c_reach), () => [chg('c_reach'), r.reach_rate != null ? mark(el('span', null, '노출 대비 ' + pct1(r.reach_rate)), 'kpi', 'reach_rate', w) : '']],
+      c_inter: [r.posts_measured > 0, () => fmtInt(r.c_inter), () => [chg('c_inter'), '좋아요·댓글·공유·저장']],
+      eng_rate: [r.posts_measured > 0 && r.eng_rate != null, () => pct(r.eng_rate), () => [chg('eng_rate', true), '인터랙션 ÷ 도달']],
+      ad_impr: [r.campaigns > 0, () => kor(r.ad_impr), () => [chg('ad_impr'), `캠페인 ${fmtInt(r.campaigns)}개`]],
+      ad_reach: [r.campaigns > 0, () => kor(r.ad_reach), () => [chg('ad_reach'), r.frequency != null ? mark(el('span', null, '빈도 ' + d3.format('.2f')(r.frequency) + '회'), 'kpi', 'frequency', w) : '']],
+      ad_clicks: [r.campaigns > 0, () => fmtInt(r.ad_clicks), () => [chg('ad_clicks'), mark(el('span', null, 'CTR ' + pct(r.ctr)), 'kpi', 'ctr', w)]],
+      ad_spend: [r.campaigns > 0, () => won(r.ad_spend), () => [chg('ad_spend'), mark(el('span', null, 'CPM ' + won(r.cpm)), 'kpi', 'cpm', w)]],
+    };
+    const fieldOf = { ad_spend: 'ad_spend' };
+    document.querySelectorAll('.sx-kpi').forEach((card) => {
+      const k = card.dataset.k, [ok, val, sub] = def[k];
+      const v = card.querySelector('.sx-kv'), s = card.querySelector('.sx-ks');
+      unskel(v);
+      v.className = 'sx-kv' + (ok ? '' : ' sx-na');
+      ['data-source', 'data-field', 'data-where'].forEach((a) => v.removeAttribute(a));
+      if (!ok) { v.textContent = '기록 없음'; s.replaceChildren(); return; }
+      v.textContent = val(); mark(v, 'kpi', fieldOf[k] || k, w);
+      s.replaceChildren(...sub().filter((x) => x != null && x !== ''));
+    });
+  }
 
-  function drawCampaigns(meta, brand) {
-    const wrap = document.querySelector('.b4-camp-wrap'), tb = document.querySelector('.b4-camp tbody');
-    document.querySelector('.b4-camp-title').textContent = '캠페인별 집행 · ' + plabel(state.period || '전체');
-    if (meta.status === 'error') { unskel(wrap); tb.replaceChildren(); return; }
-    if (meta.status !== 'ok' || state.period == null) return;
+  function drawShare(kpi) {
+    const box = document.querySelector('.sx-blist');
+    const m = METRIC[state.metric];
+    document.querySelector('.sx-share-title').textContent = m.label + ' · ' + plabel(state.period || '전체');
+    if (kpi.status === 'error') return fail(box);
+    if (kpi.status !== 'ok' || state.period == null) return;
+    unskel(box);
+    const rows = BR.map((b) => kpi.data.find((x) => x.brand === b && x.period === state.period));
+    const has = rows.filter((r) => r[m.need] > 0);
+    const total = d3.sum(has, (r) => r[state.metric]);
+    const items = rows.map((r) => {
+      const b = r.brand, ok = r[m.need] > 0;
+      const it = el('button', 'sx-bitem'); it.type = 'button'; it.style.setProperty('--sw', color(b));
+      it.addEventListener('click', () => setTab(Object.keys(TABS).find((k) => TABS[k] === b)));
+      const n = el('span', 'sx-bname'); n.append(el('i'), b);
+      const v = el('span', 'sx-bval', ok ? m.f(r[state.metric]) : '기록 없음');
+      if (ok) mark(v, 'kpi', state.metric, `brand=${enc(b)}&period=${enc(state.period)}`); else v.style.cssText = 'font-size:16px;color:var(--color-fg-muted)';
+      const sub = el('span', 'sx-bsub', ok ? `전체의 ${pct1(total ? r[state.metric] / total : 0)}` + (state.metric.startsWith('c_') ? ` · 콘텐츠 ${fmtInt(r.posts_measured)}건` : ` · 캠페인 ${fmtInt(r.campaigns)}개`) : (state.metric.startsWith('c_') && r.posts ? `콘텐츠 ${fmtInt(r.posts)}건 발행 · 수치 미기록` : '이 기간 기록 없음'));
+      it.append(n, v, sub);
+      return it;
+    });
+    const bar = el('div', 'sx-share');
+    has.forEach((r) => { const s = el('span'); s.style.setProperty('--sw', color(r.brand)); s.style.flex = String(r[state.metric] || 0.0001); bar.appendChild(s); });
+    const lab = el('div', 'sx-sharelab');
+    has.forEach((r) => lab.appendChild(el('span', null, `${r.brand} ${pct1(total ? r[state.metric] / total : 0)}`)));
+    lab.appendChild(el('span', null, '합계 ' + m.f(total)));
+    box.replaceChildren(...items, ...(has.length ? [bar, lab] : []));
+  }
+
+  function lineChart(box, bm, metric, brands, fmt, height = 290) {
+    box.querySelector('svg')?.remove(); box.querySelectorAll('.sx-empty').forEach((e) => e.remove());
+    const need = METRIC[metric].need;
+    const months = chartMonths([...new Set(bm.data.map((r) => r.month))].sort());
+    const val = (b, mo) => { const r = bm.data.find((x) => x.brand === b && x.month === mo); return r && r[need] > 0 ? r[metric] : null; };
+    const live = brands.filter((b) => months.some((mo) => val(b, mo) != null));
+    if (!live.length) return emptyBox(box, '고른 기간에 이 지표 기록이 있는 브랜드가 없어요');
+    const W = box.clientWidth || 500, H = height, mb = 26;
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`);
+    const y = d3.scaleLinear([0, (d3.max(live, (b) => d3.max(months, (mo) => val(b, mo))) || 1) * 1.1], [H - mb, 10]).nice();
+    const mL = Math.ceil(d3.max(y.ticks(5), (t) => textW(svg, kor(t)))) + 12;
+    const x = d3.scalePoint(months, [mL + 10, W - 14]);
+    const step = Math.max(1, Math.ceil(months.length / Math.max(1, Math.floor((W - mL) / 46))));
+    svg.append('g').attr('transform', `translate(${mL},0)`).call(d3.axisLeft(y).ticks(5).tickSize(-(W - mL - 6)).tickFormat(kor)).call(cleanAxis);
+    svg.append('g').attr('transform', `translate(0,${H - mb})`).call(d3.axisBottom(x).tickSize(0).tickPadding(10).tickValues(months.filter((mo, i) => i % step === 0)).tickFormat((mo) => (mo.endsWith('-01') || months.indexOf(mo) === 0 ? mo.slice(2, 4) + '.' : '') + ml(mo))).call(cleanAxis);
+    live.forEach((b) => {
+      const pts = months.map((mo) => ({ mo, v: val(b, mo) }));
+      svg.append('path').datum(pts).attr('fill', 'none').attr('stroke', color(b)).attr('stroke-width', 2.5).attr('stroke-linecap', 'round').attr('stroke-linejoin', 'round').attr('d', d3.line().defined((d) => d.v != null).x((d) => x(d.mo)).y((d) => y(d.v)));
+      svg.append('g').selectAll('circle').data(pts.filter((d) => d.v != null)).join('circle').attr('cx', (d) => x(d.mo)).attr('cy', (d) => y(d.v)).attr('r', 3.5).attr('fill', 'var(--color-panel)').attr('stroke', color(b)).attr('stroke-width', 2).attr('opacity', (d) => (state.period.length === 7 && d.mo !== state.period ? 0.35 : 1));
+    });
+    const t = tipEl(box);
+    const rule = svg.append('line').attr('y1', 10).attr('y2', H - mb).attr('stroke', 'var(--cds-chart-axis)').attr('stroke-dasharray', '3 3').attr('opacity', 0);
+    svg.append('rect').attr('x', mL).attr('width', W - mL).attr('y', 0).attr('height', H - mb).attr('fill', 'transparent')
+      .on('mousemove', (e) => {
+        const [px] = d3.pointer(e); const mo = months[d3.minIndex(months, (q) => Math.abs(x(q) - px))];
+        rule.attr('x1', x(mo)).attr('x2', x(mo)).attr('opacity', 1);
+        showTip(box, t, x(mo), 30, mlong(mo), live.map((b) => [color(b), b, val(b, mo) == null ? '기록 없음' : fmt(val(b, mo))]));
+      })
+      .on('mouseleave', () => { rule.attr('opacity', 0); t.style.display = 'none'; });
+  }
+
+  function drawTrend(bm) {
+    const box = document.getElementById('chart-trend');
+    document.querySelector('.sx-trend-title').textContent = '월별 ' + METRIC[state.metric].label + ' 추이';
+    if (bm.status === 'error') return fail(box);
+    if (bm.status !== 'ok' || state.period == null) return;
+    unskel(box);
+    legend(document.querySelector('.sx-lg-trend'), BR.map((b) => [b, color(b), true]));
+    lineChart(box, bm, state.metric, BR, METRIC[state.metric].f, box.clientWidth > 520 ? 420 : 290);
+  }
+
+  function drawTable(kpi) {
+    const wrap = document.querySelector('.sx-cmp-wrap'), table = document.querySelector('.sx-cmp-table');
+    document.querySelector('.sx-table-hint').textContent = plabel(state.period || '전체');
+    if (kpi.status === 'error') { unskel(wrap); table.querySelector('tbody').replaceChildren(); return; }
+    if (kpi.status !== 'ok' || state.period == null) return;
     unskel(wrap);
-    const rows = meta.data.filter((r) => r.brand === brand && inPeriod(r.month)).sort((a, b) => +b.spend - +a.spend);
-    if (!rows.length) return emptyRow(tb, 7, '고른 기간에 메타 광고 기록이 없어요');
-    tb.replaceChildren(...rows.map((r) => {
-      const sp = +r.spend, im = +r.impressions, ck = r.clicks === '' ? null : +r.clicks;
+    const cols = [
+      ['posts', '콘텐츠', (v) => fmtInt(v) + '건', 'posts', false],
+      ['c_views', '콘텐츠 노출', kor, 'posts_measured', true],
+      ['c_reach', '콘텐츠 도달', kor, 'posts_measured', true],
+      ['c_inter', '인터랙션', (v) => fmtInt(v), 'posts_measured', true],
+      ['eng_rate', '인터랙션율', pct, 'posts_measured', true],
+      ['ad_impr', '광고 노출', kor, 'campaigns', true],
+      ['ad_reach', '광고 도달', kor, 'campaigns', true],
+      ['ad_clicks', '광고 클릭', (v) => fmtInt(v), 'campaigns', true],
+      ['ctr', 'CTR', pct, 'campaigns', true],
+      ['ad_spend', '광고비', won, 'campaigns', false],
+      ['cpm', 'CPM', won, 'campaigns', false],
+    ];
+    const hr = el('tr'); hr.appendChild(el('th', 'l', '브랜드')); cols.forEach(([, h]) => hr.appendChild(el('th', null, h)));
+    table.querySelector('thead').replaceChildren(hr);
+    const rows = BR.map((b) => kpi.data.find((x) => x.brand === b && x.period === state.period));
+    const max = {}; cols.forEach(([k, , , need]) => (max[k] = d3.max(rows.filter((r) => r[need] > 0), (r) => r[k]) || 0));
+    const body = rows.map((r) => {
       const tr = el('tr');
-      tr.append(el('td', 'b4-l', ml(r.month)), el('td', 'b4-wrap', r.campaign || '—'), el('td', null, won(sp)), el('td', 'b4-wide', fmtInt(im)), el('td', null, ck == null ? '—' : fmtInt(ck)), el('td', null, ck != null && im ? pct(ck / im) : '—'), el('td', 'b4-wide', ck ? won(sp / ck) : '—'));
+      const n = el('td', 'l'); const d = el('span', 'sx-dot'); d.style.setProperty('--sw', color(r.brand)); n.append(d, r.brand); n.style.fontWeight = '700'; tr.appendChild(n);
+      cols.forEach(([k, , f, need, bar]) => {
+        const ok = r[need] > 0 && r[k] != null;
+        const td = el('td', ok ? null : 'na');
+        if (!ok) td.textContent = '—';
+        else { const txt = f(r[k]); if (bar) td.appendChild(cellBar(txt, r[k], max[k], color(r.brand))); else td.textContent = txt; mark(td, 'kpi', k, `brand=${enc(r.brand)}&period=${enc(r.period)}`); }
+        tr.appendChild(td);
+      });
+      return tr;
+    });
+    table.querySelector('tbody').replaceChildren(...body);
+  }
+
+  function drawTop(ct) {
+    const wrap = document.querySelector('.sx-top-wrap'), tb = document.querySelector('.sx-top-table tbody');
+    document.querySelector('.sx-top-hint').textContent = plabel(state.period || '전체');
+    if (ct.status === 'error') { unskel(wrap); tb.replaceChildren(); return; }
+    if (ct.status !== 'ok' || state.period == null) return;
+    unskel(wrap);
+    const rows = ct.data.filter((r) => inPeriod(r.month) && r.views !== '').sort((a, b) => +b.views - +a.views).slice(0, 10);
+    if (!rows.length) return emptyRow(tb, 7, '고른 기간에 노출 기록이 있는 콘텐츠가 없어요');
+    const max = +rows[0].views;
+    tb.replaceChildren(...rows.map((r) => {
+      const tr = el('tr');
+      const b = el('td', 'l'); const d = el('span', 'sx-dot'); d.style.setProperty('--sw', color(r.brand)); b.append(d, r.brand);
+      tr.append(b, el('td', 'w', r.title), el('td', 'l sx-wide', r.published));
+      const v = el('td'); v.appendChild(cellBar(fmtInt(+r.views), +r.views, max, color(r.brand))); tr.appendChild(v);
+      tr.append(el('td', 'sx-wide', r.reach === '' ? '—' : fmtInt(+r.reach)), el('td', null, fmtInt(+r.interactions || 0)), el('td', 'sx-wide', +r.reach ? pct(+r.interactions / +r.reach) : '—'));
       return tr;
     }));
   }
 
-  function drawPosts(content, brand) {
-    const wrap = document.querySelector('.b4-posts-wrap'), tb = document.querySelector('.b4-posts tbody');
-    document.querySelector('.b4-posts-title').textContent = '콘텐츠 목록 · ' + plabel(state.period || '전체');
-    if (content.status === 'error') { unskel(wrap); tb.replaceChildren(); return; }
-    if (content.status !== 'ok' || state.period == null) return;
+  function combo(box, rows, o) {
+    box.querySelector('svg')?.remove(); box.querySelectorAll('.sx-empty').forEach((e) => e.remove());
+    if (!rows.some((r) => r.ok)) return emptyBox(box, o.empty);
+    const W = box.clientWidth || 500, H = 290, mb = 26;
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`);
+    const okRows = rows.filter((r) => r.ok);
+    const yL = d3.scaleLinear([0, (d3.max(okRows, (r) => Math.max(r.bar || 0, o.lineRight ? 0 : r.line || 0)) || 1) * 1.1], [H - mb, 10]).nice();
+    const yR = o.lineRight ? d3.scaleLinear([0, (d3.max(okRows, (r) => r.line || 0) || 1) * 1.15], [H - mb, 10]).nice() : yL;
+    const mL = Math.ceil(d3.max(yL.ticks(5), (t) => textW(svg, o.fb(t)))) + 12;
+    const mR = o.lineRight ? Math.ceil(d3.max(yR.ticks(5), (t) => textW(svg, o.flAxis(t)))) + 12 : 8;
+    const x = d3.scaleBand(rows.map((r) => r.month), [mL, W - mR]).paddingInner(0.3).paddingOuter(0.15);
+    const step = Math.max(1, Math.ceil(rows.length / Math.max(1, Math.floor((W - mL - mR) / 46))));
+    svg.append('g').attr('transform', `translate(${mL},0)`).call(d3.axisLeft(yL).ticks(5).tickSize(-(W - mL - mR)).tickFormat(o.fb)).call(cleanAxis);
+    if (o.lineRight) svg.append('g').attr('transform', `translate(${W - mR},0)`).call(d3.axisRight(yR).ticks(5).tickSize(0).tickPadding(8).tickFormat(o.flAxis)).call(cleanAxis);
+    svg.append('g').attr('transform', `translate(0,${H - mb})`).call(d3.axisBottom(x).tickSize(0).tickPadding(10).tickValues(rows.map((r) => r.month).filter((mo, i) => i % step === 0)).tickFormat((mo) => (mo.endsWith('-01') || rows[0].month === mo ? mo.slice(2, 4) + '.' : '') + ml(mo))).call(cleanAxis);
+    const bw = Math.min(30, x.bandwidth());
+    const dim = (r) => (state.period.length === 7 && r.month !== state.period ? 0.35 : 1);
+    svg.append('g').selectAll('rect').data(okRows).join('rect').attr('x', (r) => x(r.month) + (x.bandwidth() - bw) / 2).attr('width', bw).attr('y', (r) => yL(r.bar || 0)).attr('height', (r) => Math.max(0, yL(0) - yL(r.bar || 0))).attr('rx', (r) => Math.min(6, (yL(0) - yL(r.bar || 0)) / 2)).attr('fill', o.barColor).attr('opacity', dim);
+    const cx = (r) => x(r.month) + x.bandwidth() / 2;
+    const lp = okRows.filter((r) => r.line != null);
+    svg.append('path').datum(lp).attr('fill', 'none').attr('stroke', o.lineColor).attr('stroke-width', 2.5).attr('stroke-linecap', 'round').attr('stroke-linejoin', 'round').attr('d', d3.line().x(cx).y((r) => yR(r.line)));
+    svg.append('g').selectAll('circle').data(lp).join('circle').attr('cx', cx).attr('cy', (r) => yR(r.line)).attr('r', 3.5).attr('fill', 'var(--color-panel)').attr('stroke', o.lineColor).attr('stroke-width', 2);
+    const t = tipEl(box);
+    svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', (r) => x(r.month) - (x.step() - x.bandwidth()) / 2).attr('width', x.step()).attr('y', 0).attr('height', H - mb).attr('fill', 'transparent')
+      .on('mousemove', (e, r) => showTip(box, t, cx(r), r.ok ? Math.min(yL(r.bar || 0), yR(r.line || 0)) : H / 2, mlong(r.month), r.ok ? o.tip(r.src) : [[null, '기록 없음', '']]))
+      .on('mouseleave', () => { t.style.display = 'none'; });
+  }
+
+  function drawBrandCharts(bm) {
+    const brand = brandName(), c = color(brand);
+    document.querySelector('.sx-bt-title').textContent = brand + ' 월별 추이';
+    document.querySelector('.sx-bt-hint').textContent = state.period && state.period !== '전체' ? state.period.slice(0, 4) + '년' : '전체 기간';
+    const ids = ['chart-b-reach', 'chart-b-inter', 'chart-b-ads', 'chart-b-eff'];
+    if (bm.status === 'error') return ids.forEach((id) => fail(document.getElementById(id)));
+    if (bm.status !== 'ok' || state.period == null) return;
+    ids.forEach((id) => unskel(document.getElementById(id)));
+    const months = chartMonths([...new Set(bm.data.map((r) => r.month))].sort());
+    const get = (mo) => bm.data.find((x) => x.brand === brand && x.month === mo);
+    const muted = 'var(--cds-chart-muted)';
+    legend(document.querySelector('.sx-lg-b1'), [['노출·조회', c], ['도달', 'var(--color-fg)', true]]);
+    combo(document.getElementById('chart-b-reach'), months.map((mo) => { const r = get(mo); const ok = !!r && r.posts_measured > 0; return { month: mo, ok, bar: ok ? r.c_views : null, line: ok ? r.c_reach : null, src: r }; }),
+      { barColor: c, lineColor: 'var(--color-fg)', fb: kor, empty: '이 기간 콘텐츠 노출·도달 수치가 시트에 없어요', tip: (r) => [[c, '노출·조회', fmtInt(r.c_views)], ['var(--color-fg)', '도달', fmtInt(r.c_reach)], [null, '콘텐츠', fmtInt(r.posts_measured) + '건']] });
+    legend(document.querySelector('.sx-lg-b2'), [['인터랙션', c], ['인터랙션율', 'var(--color-fg)', true]]);
+    combo(document.getElementById('chart-b-inter'), months.map((mo) => { const r = get(mo); const ok = !!r && r.posts_measured > 0; return { month: mo, ok, bar: ok ? r.c_inter : null, line: ok ? r.eng_rate : null, src: r }; }),
+      { barColor: c, lineColor: 'var(--color-fg)', fb: kor, lineRight: true, flAxis: d3.format('.1%'), empty: '이 기간 인터랙션 수치가 시트에 없어요', tip: (r) => [[c, '인터랙션', fmtInt(r.c_inter)], ['var(--color-fg)', '인터랙션율', pct(r.eng_rate)], [null, '도달', fmtInt(r.c_reach)]] });
+    legend(document.querySelector('.sx-lg-b3'), [['광고 노출', c], ['광고 도달', 'var(--color-fg)', true]]);
+    combo(document.getElementById('chart-b-ads'), months.map((mo) => { const r = get(mo); const ok = !!r && r.campaigns > 0; return { month: mo, ok, bar: ok ? r.ad_impr : null, line: ok ? r.ad_reach : null, src: r }; }),
+      { barColor: c, lineColor: 'var(--color-fg)', fb: kor, empty: '이 기간 메타 광고 기록이 없어요', tip: (r) => [[c, '광고 노출', fmtInt(r.ad_impr)], ['var(--color-fg)', '광고 도달', fmtInt(r.ad_reach)], [null, '클릭', fmtInt(r.ad_clicks) + ' (CTR ' + pct(r.ctr) + ')'], [null, '광고비', won(r.ad_spend)]] });
+    legend(document.querySelector('.sx-lg-b4'), [['CTR', muted], ['CPM', c, true]]);
+    combo(document.getElementById('chart-b-eff'), months.map((mo) => { const r = get(mo); const ok = !!r && r.campaigns > 0 && r.ctr != null; return { month: mo, ok, bar: ok ? r.ctr : null, line: ok ? r.cpm : null, src: r }; }),
+      { barColor: muted, lineColor: c, fb: d3.format('.1%'), lineRight: true, flAxis: kor, empty: '이 기간 메타 광고 기록이 없어요', tip: (r) => [[muted, 'CTR', pct(r.ctr)], [c, 'CPM', won(r.cpm)], [null, '광고비', won(r.ad_spend)]] });
+  }
+
+  function drawPosts(ct) {
+    const brand = brandName(), c = color(brand);
+    const wrap = document.querySelector('.sx-posts-wrap'), tb = document.querySelector('.sx-posts tbody');
+    document.querySelector('.sx-posts-title').textContent = brand + ' 콘텐츠 순위';
+    document.querySelector('.sx-bc-hint').textContent = plabel(state.period || '전체');
+    if (ct.status === 'error') { unskel(wrap); tb.replaceChildren(); return; }
+    if (ct.status !== 'ok' || state.period == null) return;
     unskel(wrap);
-    const rows = content.data.filter((r) => r.brand === brand && inPeriod(r.month)).sort((a, b) => (a.published < b.published ? 1 : a.published > b.published ? -1 : 0));
+    const rows = ct.data.filter((r) => r.brand === brand && inPeriod(r.month)).sort((a, b) => (+b.views || 0) - (+a.views || 0) || (a.published < b.published ? 1 : -1));
     if (!rows.length) return emptyRow(tb, 7, '고른 기간에 콘텐츠 기록이 없어요');
+    const max = d3.max(rows, (r) => +r.views || 0);
     tb.replaceChildren(...rows.map((r) => {
       const has = r.views !== '';
       const tr = el('tr');
-      tr.append(el('td', 'b4-l', r.published), el('td', 'b4-l b4-wide', r.type), el('td', 'b4-wrap', r.title), el('td', null, has ? fmtInt(+r.views) : '—'), el('td', 'b4-wide', r.reach === '' ? '—' : fmtInt(+r.reach)), el('td', null, r.interactions === '' ? '—' : fmtInt(+r.interactions)), el('td', 'b4-wide', r.reach !== '' && +r.reach ? pct(+r.interactions / +r.reach) : '—'));
+      const ty = el('td', 'l sx-wide'); ty.appendChild(el('span', 'sx-tag', r.type));
+      tr.append(el('td', 'w', r.title), ty, el('td', 'l sx-wide', r.published));
+      const v = el('td', has ? null : 'na'); if (has) v.appendChild(cellBar(fmtInt(+r.views), +r.views, max, c)); else v.textContent = '—'; tr.appendChild(v);
+      tr.append(el('td', has ? null : 'na', r.reach === '' ? '—' : fmtInt(+r.reach)), el('td', has ? null : 'na', r.interactions === '' ? '—' : fmtInt(+r.interactions)), el('td', 'sx-wide' + (has ? '' : ' na'), +r.reach ? pct(+r.interactions / +r.reach) : '—'));
       return tr;
     }));
   }
 
+  function drawCampaigns(meta) {
+    const brand = brandName(), c = color(brand);
+    const wrap = document.querySelector('.sx-camp-wrap'), tb = document.querySelector('.sx-camp tbody');
+    document.querySelector('.sx-camp-title').textContent = brand + ' 캠페인별 성과';
+    document.querySelector('.sx-bk-hint').textContent = plabel(state.period || '전체');
+    if (meta.status === 'error') { unskel(wrap); tb.replaceChildren(); return; }
+    if (meta.status !== 'ok' || state.period == null) return;
+    unskel(wrap);
+    const rows = meta.data.filter((r) => r.brand === brand && inPeriod(r.month)).sort((a, b) => +b.impressions - +a.impressions);
+    if (!rows.length) return emptyRow(tb, 7, '고른 기간에 메타 광고 기록이 없어요');
+    const max = d3.max(rows, (r) => +r.impressions || 0);
+    tb.replaceChildren(...rows.map((r) => {
+      const im = +r.impressions, ck = r.clicks === '' ? null : +r.clicks;
+      const tr = el('tr');
+      tr.append(el('td', 'w', r.campaign || '—'), el('td', 'l sx-wide', ml(r.month)));
+      const v = el('td'); v.appendChild(cellBar(fmtInt(im), im, max, c)); tr.appendChild(v);
+      tr.append(el('td', null, fmtInt(+r.reach)), el('td', null, ck == null ? '—' : fmtInt(ck)), el('td', null, ck != null && im ? pct(ck / im) : '—'), el('td', 'sx-wide', won(+r.spend)));
+      return tr;
+    }));
+  }
+
+  function drawNotes(cv) {
+    const ul = document.querySelector('.sx-notes');
+    if (cv.status === 'error') return fail(ul);
+    if (cv.status !== 'ok') return;
+    const rows = state.tab === 'all' ? cv.data : cv.data.filter((r) => r.brand === brandName());
+    ul.replaceChildren(
+      ...rows.map((r) => el('li', null, `${r.brand} — 메타 광고 ${r.meta_range} · 인스타 콘텐츠 ${r.content_range}${r.note ? ' · ' + r.note : ''}`)),
+      el('li', null, '콘텐츠 노출·도달은 게시물 기준(오가닉), 광고 노출·도달은 메타 광고 보고서 기준이에요. 같은 게시물을 광고로 돌리면 두 숫자에 겹쳐 잡힐 수 있어 합치지 않고 나란히 보여줘요.'),
+      el('li', null, '초당약품 콘텐츠 노출은 이미지는 노출수, 영상은 조회수예요. 브랜드 시트마다 기록된 기간이 달라 비교할 때 기간을 맞춰 보세요.'),
+    );
+  }
+
   function draw() {
-    const bm = dash.data('brand_month'), bp = dash.data('brand_period');
-    drawControls(bm);
-    drawTabs();
-    if (state.tab !== 'all') { drawBrand(bm, bp); return; }
-    drawHeader(bp);
-    drawCards(bp);
-    document.querySelector('.b4-ads-title').textContent = '월별 메타 광고 · ' + (state.period && state.period !== '전체' ? state.period.slice(0, 4) + '년' : '전체 기간');
-    brandChart(document.getElementById('chart-ads'), bm, state.ads, (r) => r.campaigns > 0, document.querySelector('.b4-lg-ads'));
-    brandChart(document.getElementById('chart-content'), bm, state.ct, (r) => (state.ct === 'posts' ? r.posts > 0 : r.posts_measured > 0), document.querySelector('.b4-lg-ct'));
-    drawFollowers(bm);
-    drawCompare(bp);
-    drawTop(dash.data('content'));
-    drawCoverage(dash.data('coverage'));
+    const bm = dash.data('brand_month'), kpi = dash.data('kpi');
+    drawShell(bm);
+    drawStatus(kpi);
+    drawKpis(kpi);
+    if (state.tab === 'all') {
+      drawShare(kpi);
+      drawTrend(bm);
+      drawTable(kpi);
+      drawTop(dash.data('content'));
+    } else {
+      drawBrandCharts(bm);
+      drawPosts(dash.data('content'));
+      drawCampaigns(dash.data('meta'));
+    }
+    drawNotes(dash.data('coverage'));
   }
   dash.onData(draw);
 })();
 </script>
 
 <div class="site-foot">
-  데이터 출처: 플랜튜드 · 아이비에듀 · 초당약품 · 모어댄트립 브랜드 운영 시트(엑셀 내려받기) · 정리 파일은 같은 위치의 CSV 3개<br>
-  데이터 기준일: <span id="asof">2026-10-27</span> · 숫자를 바꾸려면 CSV 3개만 같은 이름의 새 파일로 교체하면 됩니다.
+  데이터 출처: 플랜튜드 · 아이비에듀 · 초당약품 · 모어댄트립 브랜드 운영 시트(엑셀 내려받기) · 정리 파일은 같은 위치의 CSV 2개(meta_ads.csv, ig_content.csv)<br>
+  데이터 기준일: <span id="asof">2026-10-27</span> · 숫자를 바꾸려면 CSV 2개만 같은 이름의 새 파일로 교체하면 됩니다.
 </div>
 </div>
 <script>
 (function () {
-  var files = { meta: 'meta_ads.csv', content: 'ig_content.csv', followers: 'ig_followers.csv' };
+  var files = { meta: 'meta_ads.csv', content: 'ig_content.csv' };
   var ids = Object.keys(files);
   Promise.all(ids.map(function (id) {
     return d3.csv(files[id] + '?v=' + Date.now()).then(function (rows) { dash._set(id, rows); }, function (e) { dash._fail(id, String(e)); throw e; });
   })).catch(function () {
     var box = document.createElement('div'); box.className = 'site-error';
-    box.textContent = '데이터 파일(data 폴더의 CSV)을 불러오지 못했어요. GitHub Pages 주소로 열었는지, CSV 3개(meta_ads.csv, ig_content.csv, ig_followers.csv)가 index.html과 같은 위치에 정확한 이름으로 올라갔는지 확인해 주세요. (파일을 더블클릭해 열면 브라우저 보안 때문에 읽지 못해요.)';
+    box.textContent = '데이터 파일(data 폴더의 CSV)을 불러오지 못했어요. GitHub Pages 주소로 열었는지, CSV 2개(meta_ads.csv, ig_content.csv)가 index.html과 같은 위치에 정확한 이름으로 올라갔는지 확인해 주세요. (파일을 더블클릭해 열면 브라우저 보안 때문에 읽지 못해요.)';
     var root = document.getElementById('dash-root'); root.insertBefore(box, root.firstChild);
   }).finally(function () { dash._run(); dash._emit(); });
   var t; window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(dash._emit, 150); });
